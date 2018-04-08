@@ -93,5 +93,18 @@ namespace ZPaint
 
             Cursor = Cursors.Arrow;
         }
+
+        private void butLab1_Click(object sender, RoutedEventArgs e)
+        {
+            ListFigures list = new ListFigures();
+            list.Add(new Line(new Point(50, 50), new Point(50, 200)));
+            list.Add(new Rectangle(new Point(60, 50), new Point(150, 200)));
+            list.Add(new Ellipse(new Point(170, 50), new Point(300, 200)));
+            list.Add(new Square(new Point(310, 50), new Point(400, 200)));
+            list.Add(new Circle(new Point(500, 50), new Point(600, 200)));
+            list.Add(new Triangle(new Point(680, 50), new Point(780, 200)));
+            list.Add(new Hexagon(new Point(800, 50), new Point(900, 200)));       
+            list.Draw(canvas);
+        }
     }
 }

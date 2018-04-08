@@ -8,7 +8,9 @@
         Title="MainWindow" Height="707" Width="1050">
     <Grid>
 
-        <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3"/>
+        <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3">
+            <Button x:Name="butLab1" Content="Lab1" HorizontalAlignment="Left" Height="23" Margin="974,9,0,0" VerticalAlignment="Top" Width="57" Click="butLab1_Click"/>
+        </Border>
         <Button x:Name="butRectangle" Content="▭" HorizontalAlignment="Left" Height="23" Margin="129,636,0,0" VerticalAlignment="Top" Width="23" Click="butRectangle_Click" RenderTransformOrigin="0.522,0.522"/>
         <Button x:Name="butEllipse" Content="⬭" HorizontalAlignment="Left" Height="23" Margin="209,636,0,0" VerticalAlignment="Top" Width="23" Click="butEllipse_Click" RenderTransformOrigin="0.5,0.5"/>
         <Button x:Name="butLine" Content="—" HorizontalAlignment="Left" Height="23" Margin="50,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="0.783,0.522" Click="butLine_Click"/>
