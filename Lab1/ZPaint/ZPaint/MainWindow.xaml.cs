@@ -49,7 +49,7 @@ namespace ZPaint
 
         private void butPolygon_Click(object sender, RoutedEventArgs e)
         {
-            factory = new FactoryPolygon();
+            factory = new FactoryHexagon();
         }
 
         private void canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

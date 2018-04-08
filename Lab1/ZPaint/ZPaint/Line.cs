@@ -58,6 +58,9 @@ namespace ZPaint
         }
 
         public Line(Point point1, Point point2) : base(point1, point2)
+        { }
+
+        protected override void SetScales()
         {
             X1 = point1.X;
             Y1 = point1.Y;

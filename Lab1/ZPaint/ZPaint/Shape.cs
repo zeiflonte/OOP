@@ -68,7 +68,7 @@ namespace ZPaint
             SetPosition();   
         }
 
-        protected void SetPoints(Point point1, Point point2)
+        private void SetPoints(Point point1, Point point2)
         {
             double height = Math.Abs(point1.Y - point2.Y);
             double width = Math.Abs(point1.X - point2.X);
@@ -105,7 +105,7 @@ namespace ZPaint
             Height = Math.Abs(point1.Y - point2.Y);
         }
 
-        public void SetPosition()
+        private void SetPosition()
         {
             Canvas.SetLeft(figure, point1.X);
             Canvas.SetTop(figure, point1.Y);
