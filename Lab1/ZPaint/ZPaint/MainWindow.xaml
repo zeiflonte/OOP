@@ -10,12 +10,13 @@
         <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3"/>
 
         <Button x:Name="butRectangle" Content="▭" HorizontalAlignment="Left" Height="23" Margin="90,636,0,0" VerticalAlignment="Top" Width="23" Click="butRectangle_Click" RenderTransformOrigin="0.522,0.522"/>
-        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="626" VerticalAlignment="Top" Width="1042" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp"/>
+        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="626" VerticalAlignment="Top" Width="1042" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp" Margin="0,50,0,0"/>
         <Button x:Name="butEllipse" Content="⬭" HorizontalAlignment="Left" Height="23" Margin="170,636,0,0" VerticalAlignment="Top" Width="23" Click="butEllipse_Click" RenderTransformOrigin="0.5,0.5"/>
         <Button x:Name="butLine" Content="—" HorizontalAlignment="Left" Height="23" Margin="50,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="0.783,0.522" Click="butLine_Click"/>
         <Button x:Name="butCircle" Content="○" HorizontalAlignment="Left" Height="23" Margin="130,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="0.174,0.478" Click="butCircle_Click"/>
-        <Button x:Name="butPolygon_Copy1" Content="▣" HorizontalAlignment="Left" Height="23" Margin="210,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="2.087,0.522" Click="butPolygon_Click"/>
+        <Button x:Name="butHexagon" Content="⑥" HorizontalAlignment="Left" Height="23" Margin="253,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="2.087,0.522" Click="butHexagon_Click"/>
         <Button x:Name="butCursor" Content="➤" HorizontalAlignment="Left" Height="23" Margin="10,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="0.783,0.522" Click="butCursor_Click"/>
+        <Button x:Name="butTriangle" Content="△" HorizontalAlignment="Left" Height="23" Margin="212,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="2.087,0.522" Click="butTriangle_Click"/>
 
     </Grid>
 </Window>

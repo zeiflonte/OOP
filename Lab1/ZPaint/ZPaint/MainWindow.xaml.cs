@@ -57,7 +57,12 @@ namespace ZPaint
             factory = new FactoryEllipse();
         }
 
-        private void butPolygon_Click(object sender, RoutedEventArgs e)
+        private void butTriangle_Click(object sender, RoutedEventArgs e)
+        {
+            factory = new FactoryTriangle();
+        }
+
+        private void butHexagon_Click(object sender, RoutedEventArgs e)
         {
             factory = new FactoryHexagon();
         }

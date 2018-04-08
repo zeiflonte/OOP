@@ -44,6 +44,14 @@ namespace ZPaint
         }
     }
 
+    class FactoryTriangle : Factory
+    {
+        public override Shape Create(Point point1, Point point2)
+        {
+            return new Triangle(point1, point2);
+        }
+    }
+
     class FactoryHexagon : Factory
     {
         public override Shape Create(Point point1, Point point2)

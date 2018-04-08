@@ -12,7 +12,7 @@ namespace ZPaint
     {
         public Polygon(Point point1, Point point2) : base(point1, point2)
         {
-            ((System.Windows.Shapes.Polygon)figure).Points = new PointCollection(GeneratePolygon());
+            ((System.Windows.Shapes.Polygon)figure).Points = new PointCollection(DrawPolygon());
         }
 
         public override System.Windows.Shapes.Shape DrawFigure()
@@ -20,6 +20,6 @@ namespace ZPaint
             return new System.Windows.Shapes.Polygon();
         }
 
-        protected abstract Point[] GeneratePolygon();
+        protected abstract Point[] DrawPolygon();
     }
 }

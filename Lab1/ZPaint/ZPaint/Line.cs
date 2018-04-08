@@ -60,10 +60,13 @@ namespace ZPaint
 
         protected override void SetParameters(Point point1, Point point2)
         {
-            X1 = point1.X;
-            Y1 = point1.Y;
-            X2 = point2.X;
-            Y2 = point2.Y;
+            this.point1 = point1;
+            this.point2 = point2;
+
+            X1 = this.point1.X;
+            Y1 = this.point1.Y;
+            X2 = this.point2.X;
+            Y2 = this.point2.Y;
         }
 
         public override System.Windows.Shapes.Shape DrawFigure()
