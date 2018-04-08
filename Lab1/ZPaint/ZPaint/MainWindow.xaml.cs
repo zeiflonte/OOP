@@ -18,13 +18,12 @@ namespace ZPaint
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-  
-    
 
     public partial class MainWindow : Window
     {
         private Shape shape;
-        //private Factory factory;
+        private Factory factory;
+
         private Point point1;
         private Point point2;
 
@@ -35,8 +34,12 @@ namespace ZPaint
 
         private void butRectangle_Click(object sender, RoutedEventArgs e)
         {
-            //shape = new Rectangle(point1, point2);
-            //Canvas.Stroke = Brushes.Black;
+            factory = new FactoryRectangle();
+        }
+
+        private void butEllipse_Click(object sender, RoutedEventArgs e)
+        {
+            factory = new FactoryEllipse();
         }
 
         private void canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -49,12 +52,10 @@ namespace ZPaint
         {
             point2 = e.GetPosition(canvas);
 
-            shape = new Rectangle(point1, point2);
+            shape = factory.Create(point1, point2);
             shape.DrawInCanvas(point1, point2, canvas);
 
             Cursor = Cursors.Arrow;
         }
-
-     
     }
 }

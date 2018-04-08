@@ -9,6 +9,7 @@
     <Grid>
         <Button x:Name="butRectangle" Content="▮" HorizontalAlignment="Left" Height="23" Margin="10,636,0,0" VerticalAlignment="Top" Width="23" Click="butRectangle_Click"/>
         <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="626" VerticalAlignment="Top" Width="1042" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp"/>
+        <Button x:Name="butEllipse" Content="⬭" HorizontalAlignment="Left" Height="23" Margin="47,636,0,0" VerticalAlignment="Top" Width="23" Click="butEllipse_Click" RenderTransformOrigin="0.5,0.5"/>
 
     </Grid>
 </Window>

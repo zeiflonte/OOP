@@ -14,7 +14,7 @@ namespace ZPaint
         public System.Windows.Shapes.Shape figure;
 
         protected Point point1;
-        protected Point point2;
+        public Point point2;
       
         private Color color;
 
@@ -64,10 +64,7 @@ namespace ZPaint
 
             SetScales();
 
-            SetPosition();
-
-
-            
+            SetPosition();   
         }
 
         protected void SetPoints(Point point1, Point point2)
