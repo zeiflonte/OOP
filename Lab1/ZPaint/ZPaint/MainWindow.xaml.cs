@@ -35,11 +35,8 @@ namespace ZPaint
 
         private void butRectangle_Click(object sender, RoutedEventArgs e)
         {
-            Shape shape = new Rectangle(point1, point2);
-            shape.DrawInCanvas(canvas);
-
-        //    Canvas.SetLeft(shape, X);
-        //    Canvas.SetTop(shape, Y);
+            //shape = new Rectangle(point1, point2);
+            //Canvas.Stroke = Brushes.Black;
         }
 
         private void canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -48,11 +45,13 @@ namespace ZPaint
             point1 = e.GetPosition(canvas);
         }
 
-        
-
         private void canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             point2 = e.GetPosition(canvas);
+
+            shape = new Rectangle(point1, point2);
+            shape.DrawInCanvas(point1, point2, canvas);
+
             Cursor = Cursors.Arrow;
         }
 

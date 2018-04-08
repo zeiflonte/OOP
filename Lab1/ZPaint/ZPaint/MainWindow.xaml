@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ZPaint"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="700" Width="1050">
     <Grid>
-        <Button x:Name="butRectangle" Content="▮" HorizontalAlignment="Left" Height="23" Margin="10,286,0,0" VerticalAlignment="Top" Width="23" Click="butRectangle_Click"/>
-        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="274" VerticalAlignment="Top" Width="517" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp"/>
+        <Button x:Name="butRectangle" Content="▮" HorizontalAlignment="Left" Height="23" Margin="10,636,0,0" VerticalAlignment="Top" Width="23" Click="butRectangle_Click"/>
+        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="626" VerticalAlignment="Top" Width="1042" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp"/>
 
     </Grid>
 </Window>
