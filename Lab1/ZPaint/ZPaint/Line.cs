@@ -4,61 +4,67 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace ZPaint
 {
     public class Line : Shape
     {
-/*        public new System.Windows.Shapes.Line figure;
+        //public new System.Windows.Shapes.Line figure;
 
         public double X1
         {
             get
             {
-                return figure.X1;
+                return ((System.Windows.Shapes.Line)figure).X1;
             }
             set
             {
-                figure.X1 = value;
+                ((System.Windows.Shapes.Line)figure).X1 = value;
             }
         }
         public double X2
         {
             get
             {
-                return figure.X2;
+                return ((System.Windows.Shapes.Line)figure).X2;
             }
             set
             {
-                figure.X2 = value;
+                ((System.Windows.Shapes.Line)figure).X2 = value;
             }
         }
         public double Y1
         {
             get
             {
-                return figure.Y1;
+                return ((System.Windows.Shapes.Line)figure).Y1;
             }
             set
             {
-                figure.Y1 = value;
+                ((System.Windows.Shapes.Line)figure).Y1 = value;
             }
         }
         public double Y2
         {
             get
             {
-                return figure.Y2;
+                return ((System.Windows.Shapes.Line)figure).Y2;
             }
             set
             {
-                figure.Y2 = value;
+                ((System.Windows.Shapes.Line)figure).Y2 = value;
             }
-        }   */
+        }
 
         public Line(Point point1, Point point2) : base(point1, point2)
         {
-            
+            X1 = point1.X;
+            Y1 = point1.Y;
+            X2 = point2.X;
+            Y2 = point2.Y;
+
+            figure.Stroke = Brushes.Black;
             figure.StrokeThickness = 2;
         }
 

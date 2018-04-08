@@ -35,4 +35,12 @@ namespace ZPaint
             return new Ellipse(point1, point2);
         }
     }
+
+    class FactoryHexagon : Factory
+    {
+        public override Shape Create(Point point1, Point point2)
+        {
+            return new Hexagon(point1, point2);
+        }
+    }
 }

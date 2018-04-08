@@ -19,6 +19,8 @@ namespace ZPaint
 
         private Color color;
 
+        
+
         public Color Color
         {
             get
@@ -94,12 +96,10 @@ namespace ZPaint
                     this.point1.X -= width;
                     this.point2.X += width;
                 }
-            }
-
-            
+            }                         
         }
 
-        protected void SetScales()
+        protected virtual void SetScales()
         {
             Width = Math.Abs(point1.X - point2.X);
             Height = Math.Abs(point1.Y - point2.Y);

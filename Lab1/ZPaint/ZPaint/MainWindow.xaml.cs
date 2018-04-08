@@ -47,6 +47,11 @@ namespace ZPaint
             factory = new FactoryEllipse();
         }
 
+        private void butPolygon_Click(object sender, RoutedEventArgs e)
+        {
+            factory = new FactoryPolygon();
+        }
+
         private void canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Cursor = Cursors.Pen;
