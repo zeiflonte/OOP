@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="Ellipse.cs" />
     <Compile Include="Factory.cs" />
+    <Compile Include="Hexagon.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="Polygon.cs" />
     <Compile Include="Rectangle.cs" />

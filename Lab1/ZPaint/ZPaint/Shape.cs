@@ -19,8 +19,6 @@ namespace ZPaint
 
         private Color color;
 
-        
-
         public Color Color
         {
             get
@@ -33,7 +31,7 @@ namespace ZPaint
             }
         }
 
-        private double Height
+        public double Height
         {
             get
             {
@@ -60,12 +58,17 @@ namespace ZPaint
         public Shape(Point point1, Point point2)
         {
             figure = DrawFigure();
-      
+
+            SetParameters(point1, point2); 
+        }
+
+        protected virtual void SetParameters(Point point1, Point point2)
+        {
             SetPoints(point1, point2);
 
             SetScales();
 
-            SetPosition();   
+            SetPosition();
         }
 
         private void SetPoints(Point point1, Point point2)
@@ -75,7 +78,7 @@ namespace ZPaint
 
             this.point1 = point1;
             this.point2 = point2;
-
+            
             if (point2.X > point1.X)
             {
                 if (point2.Y < point1.Y)
@@ -96,7 +99,7 @@ namespace ZPaint
                     this.point1.X -= width;
                     this.point2.X += width;
                 }
-            }                         
+            }                        
         }
 
         protected virtual void SetScales()
