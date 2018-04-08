@@ -20,6 +20,14 @@ namespace ZPaint
         }
     }
 
+    class FactorySquare : Factory
+    {
+        public override Shape Create(Point point1, Point point2)
+        {
+            return new Square(point1, point2);
+        }
+    }
+
     class FactoryRectangle : Factory
     {
         public override Shape Create(Point point1, Point point2)

@@ -42,6 +42,11 @@ namespace ZPaint
             factory = new FactoryLine();
         }
 
+        private void butSquare_Click(object sender, RoutedEventArgs e)
+        {
+            factory = new FactorySquare();
+        }
+
         private void butRectangle_Click(object sender, RoutedEventArgs e)
         {
             factory = new FactoryRectangle();

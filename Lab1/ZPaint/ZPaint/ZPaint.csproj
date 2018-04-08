@@ -60,9 +60,11 @@
     <Compile Include="Factory.cs" />
     <Compile Include="Hexagon.cs" />
     <Compile Include="Line.cs" />
+    <Compile Include="ListFigures.cs" />
     <Compile Include="Polygon.cs" />
     <Compile Include="Rectangle.cs" />
     <Compile Include="Shape.cs" />
+    <Compile Include="Square.cs" />
     <Compile Include="Triangle.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
