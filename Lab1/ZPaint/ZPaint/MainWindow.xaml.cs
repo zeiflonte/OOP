@@ -32,6 +32,11 @@ namespace ZPaint
             InitializeComponent();
         }
 
+        private void butCursor_Click(object sender, RoutedEventArgs e)
+        {
+            factory = null;
+        }
+
         private void butLine_Click(object sender, RoutedEventArgs e)
         {
             factory = new FactoryLine();
@@ -59,7 +64,10 @@ namespace ZPaint
 
         private void canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Cursor = Cursors.Pen;
+            if (factory != null)
+            {
+                Cursor = Cursors.Pen;
+            }
             point1 = e.GetPosition(canvas);
         }
 

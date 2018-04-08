@@ -5,14 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ZPaint"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="1050">
+        Title="MainWindow" Height="707" Width="1050">
     <Grid>
-        <Button x:Name="butRectangle" Content="▭" HorizontalAlignment="Left" Height="23" Margin="50,636,0,0" VerticalAlignment="Top" Width="23" Click="butRectangle_Click" RenderTransformOrigin="0.522,0.522"/>
+        <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3"/>
+
+        <Button x:Name="butRectangle" Content="▭" HorizontalAlignment="Left" Height="23" Margin="90,636,0,0" VerticalAlignment="Top" Width="23" Click="butRectangle_Click" RenderTransformOrigin="0.522,0.522"/>
         <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="626" VerticalAlignment="Top" Width="1042" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp"/>
-        <Button x:Name="butEllipse" Content="⬭" HorizontalAlignment="Left" Height="23" Margin="131,636,0,0" VerticalAlignment="Top" Width="23" Click="butEllipse_Click" RenderTransformOrigin="0.5,0.5"/>
-        <Button x:Name="butLine" Content="—" HorizontalAlignment="Left" Height="23" Margin="10,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="0.783,0.522" Click="butLine_Click"/>
-        <Button x:Name="butCircle" Content="○" HorizontalAlignment="Left" Height="23" Margin="91,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="0.174,0.478" Click="butCircle_Click"/>
-        <Button x:Name="butPolygon_Copy1" Content="▣" HorizontalAlignment="Left" Height="23" Margin="171,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="2.087,0.522" Click="butPolygon_Click"/>
+        <Button x:Name="butEllipse" Content="⬭" HorizontalAlignment="Left" Height="23" Margin="170,636,0,0" VerticalAlignment="Top" Width="23" Click="butEllipse_Click" RenderTransformOrigin="0.5,0.5"/>
+        <Button x:Name="butLine" Content="—" HorizontalAlignment="Left" Height="23" Margin="50,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="0.783,0.522" Click="butLine_Click"/>
+        <Button x:Name="butCircle" Content="○" HorizontalAlignment="Left" Height="23" Margin="130,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="0.174,0.478" Click="butCircle_Click"/>
+        <Button x:Name="butPolygon_Copy1" Content="▣" HorizontalAlignment="Left" Height="23" Margin="210,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="2.087,0.522" Click="butPolygon_Click"/>
+        <Button x:Name="butCursor" Content="➤" HorizontalAlignment="Left" Height="23" Margin="10,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="0.783,0.522" Click="butCursor_Click"/>
 
     </Grid>
 </Window>
