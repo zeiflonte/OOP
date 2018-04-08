@@ -57,6 +57,7 @@
     </ApplicationDefinition>
     <Compile Include="Ellipse.cs" />
     <Compile Include="Factory.cs" />
+    <Compile Include="Line.cs" />
     <Compile Include="Rectangle.cs" />
     <Compile Include="Shape.cs" />
     <Page Include="MainWindow.xaml">

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace ZPaint
 {
@@ -14,11 +15,9 @@ namespace ZPaint
         public System.Windows.Shapes.Shape figure;
 
         protected Point point1;
-        public Point point2;
-      
-        private Color color;
+        protected Point point2;
 
-        
+        private Color color;
 
         public Color Color
         {
@@ -32,7 +31,7 @@ namespace ZPaint
             }
         }
 
-        public double Height
+        private double Height
         {
             get
             {
@@ -59,7 +58,7 @@ namespace ZPaint
         public Shape(Point point1, Point point2)
         {
             figure = DrawFigure();
-
+      
             SetPoints(point1, point2);
 
             SetScales();
@@ -95,7 +94,9 @@ namespace ZPaint
                     this.point1.X -= width;
                     this.point2.X += width;
                 }
-            }           
+            }
+
+            
         }
 
         protected void SetScales()

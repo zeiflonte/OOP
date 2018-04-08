@@ -12,6 +12,14 @@ namespace ZPaint
         public abstract Shape Create(Point point1, Point point2);
     }
 
+    class FactoryLine : Factory
+    {
+        public override Shape Create(Point point1, Point point2)
+        {
+            return new Line(point1, point2);
+        }
+    }
+
     class FactoryRectangle : Factory
     {
         public override Shape Create(Point point1, Point point2)

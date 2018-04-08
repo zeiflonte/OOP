@@ -32,6 +32,11 @@ namespace ZPaint
             InitializeComponent();
         }
 
+        private void butLine_Click(object sender, RoutedEventArgs e)
+        {
+            factory = new FactoryLine();
+        }
+
         private void butRectangle_Click(object sender, RoutedEventArgs e)
         {
             factory = new FactoryRectangle();
@@ -52,10 +57,13 @@ namespace ZPaint
         {
             point2 = e.GetPosition(canvas);
 
-            shape = factory.Create(point1, point2);
-            shape.DrawInCanvas(point1, point2, canvas);
+            if (factory != null)
+            {
+                shape = factory.Create(point1, point2);
+                shape.DrawInCanvas(point1, point2, canvas);
+            }
 
             Cursor = Cursors.Arrow;
-        }
+        }        
     }
 }
