@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Circle.cs" />
     <Compile Include="Ellipse.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="Hexagon.cs" />

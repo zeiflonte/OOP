@@ -42,6 +42,11 @@ namespace ZPaint
             factory = new FactoryRectangle();
         }
 
+        private void butCircle_Click(object sender, RoutedEventArgs e)
+        {
+            factory = new FactoryCircle();
+        }
+
         private void butEllipse_Click(object sender, RoutedEventArgs e)
         {
             factory = new FactoryEllipse();
@@ -69,6 +74,6 @@ namespace ZPaint
             }
 
             Cursor = Cursors.Arrow;
-        }        
+        }
     }
 }

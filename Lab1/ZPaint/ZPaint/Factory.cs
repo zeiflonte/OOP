@@ -28,6 +28,14 @@ namespace ZPaint
         }
     }
 
+    class FactoryCircle : Factory
+    {
+        public override Shape Create(Point point1, Point point2)
+        {
+            return new Circle(point1, point2);
+        }
+    }
+
     class FactoryEllipse : Factory
     {
         public override Shape Create(Point point1, Point point2)
