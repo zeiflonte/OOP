@@ -10,7 +10,7 @@ namespace ZPaint
 {
     public abstract class Polygon : Shape
     {
-        public Polygon(Point point1, Point point2) : base(point1, point2)
+        public Polygon(int thickness, Point point1, Point point2) : base(thickness, point1, point2)
         {
             ((System.Windows.Shapes.Polygon)figure).Points = new PointCollection(DrawPolygon());
         }

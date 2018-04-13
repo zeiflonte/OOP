@@ -16,6 +16,7 @@ namespace ZPaint
 
         protected Point point1;
         protected Point point2;
+        protected int thickness;
 
         private Color color;
 
@@ -55,18 +56,18 @@ namespace ZPaint
             }
         }
 
-        public Shape(Point point1, Point point2)
+        public Shape(int thickness, Point point1, Point point2)
         {
             figure = DrawFigure();
 
-            SetParameters(point1, point2); 
+            SetParameters(thickness, point1, point2); 
         }
 
-        protected virtual void SetParameters(Point point1, Point point2)
+        protected virtual void SetParameters(int thinkness, Point point1, Point point2)
         {
             SetPoints(point1, point2);
 
-            SetScales();
+            SetScales(thinkness);
 
             SetPosition();
         }
@@ -102,8 +103,9 @@ namespace ZPaint
             }                        
         }
 
-        protected virtual void SetScales()
+        protected virtual void SetScales(int thickness)
         {
+            this.thickness = thickness;
             Width = Math.Abs(point1.X - point2.X);
             Height = Math.Abs(point1.Y - point2.Y);
         }
@@ -117,6 +119,7 @@ namespace ZPaint
         public void DrawInCanvas(Point point1, Point point2, Canvas canvas)
         {
             figure.Stroke = Brushes.Black;
+            figure.StrokeThickness = this.thickness;
             canvas.Children.Add(figure);
         }
          

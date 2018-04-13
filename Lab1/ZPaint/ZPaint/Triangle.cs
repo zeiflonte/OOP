@@ -9,7 +9,7 @@ namespace ZPaint
 {
     public class Triangle : Polygon
     {
-        public Triangle(Point point1, Point point2) : base(point1, point2)
+        public Triangle(int thickness, Point point1, Point point2) : base(thickness, point1, point2)
         { }
 
         protected override Point[] DrawPolygon()

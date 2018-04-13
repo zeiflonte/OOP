@@ -26,6 +26,7 @@ namespace ZPaint
 
         private Point point1;
         private Point point2;
+        private int thickness;
 
         public MainWindow()
         {
@@ -87,7 +88,7 @@ namespace ZPaint
 
             if (factory != null)
             {
-                shape = factory.Create(point1, point2);
+                shape = factory.Create(thickness, point1, point2);
                 shape.DrawInCanvas(point1, point2, canvas);
             }
 
@@ -97,14 +98,31 @@ namespace ZPaint
         private void butLab1_Click(object sender, RoutedEventArgs e)
         {
             ListFigures list = new ListFigures();
-            list.Add(new Line(new Point(50, 50), new Point(50, 200)));
-            list.Add(new Rectangle(new Point(60, 50), new Point(150, 200)));
-            list.Add(new Ellipse(new Point(170, 50), new Point(300, 200)));
-            list.Add(new Square(new Point(310, 50), new Point(400, 200)));
-            list.Add(new Circle(new Point(500, 50), new Point(600, 200)));
-            list.Add(new Triangle(new Point(680, 50), new Point(780, 200)));
-            list.Add(new Hexagon(new Point(800, 50), new Point(900, 200)));       
+            list.Add(new Line(thickness, new Point(50, 50), new Point(50, 200)));
+            list.Add(new Rectangle(thickness, new Point(60, 50), new Point(150, 200)));
+            list.Add(new Ellipse(thickness, new Point(170, 50), new Point(300, 200)));
+            list.Add(new Square(thickness, new Point(310, 50), new Point(400, 200)));
+            list.Add(new Circle(thickness, new Point(500, 50), new Point(600, 200)));
+            list.Add(new Triangle(thickness, new Point(680, 50), new Point(780, 200)));
+            list.Add(new Hexagon(thickness, new Point(800, 50), new Point(900, 200)));       
             list.Draw(canvas);
+        }
+
+        private void cbThickness_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((cbThickness.SelectedIndex == 0) || (cbThickness.SelectedIndex == 1))
+            {
+                thickness = 1;
+            }
+            if (cbThickness.SelectedIndex == 1)
+            {
+                thickness = 2;
+            }
+            if (cbThickness.SelectedIndex == 2)
+            {
+                thickness = 3;
+            }
+
         }
     }
 }

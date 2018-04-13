@@ -9,11 +9,12 @@ namespace ZPaint
 {
     public class Circle : Ellipse
     {
-        public Circle(Point point1, Point point2) : base(point1, point2)
+        public Circle(int thickness, Point point1, Point point2) : base(thickness, point1, point2)
         { }
 
-        protected override void SetScales()
+        protected override void SetScales(int thickness)
         {
+            this.thickness = thickness;
             Height = Math.Abs(point1.Y - point2.Y);
             Width = Math.Abs(point1.X - point2.X);
             if (Width > Height)

@@ -55,10 +55,10 @@ namespace ZPaint
             }
         }
 
-        public Line(Point point1, Point point2) : base(point1, point2)
+        public Line(int thickness, Point point1, Point point2) : base(thickness, point1, point2)
         { }
 
-        protected override void SetParameters(Point point1, Point point2)
+        protected override void SetParameters(int thickness, Point point1, Point point2)
         {
             this.point1 = point1;
             this.point2 = point2;
@@ -67,6 +67,8 @@ namespace ZPaint
             Y1 = this.point1.Y;
             X2 = this.point2.X;
             Y2 = this.point2.Y;
+
+            this.thickness = thickness;
         }
 
         public override System.Windows.Shapes.Shape DrawFigure()
