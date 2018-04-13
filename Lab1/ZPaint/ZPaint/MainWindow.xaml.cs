@@ -27,6 +27,7 @@ namespace ZPaint
         private Point point1;
         private Point point2;
         private int thickness;
+        private SolidColorBrush color;
 
         public MainWindow()
         {
@@ -88,7 +89,7 @@ namespace ZPaint
 
             if (factory != null)
             {
-                shape = factory.Create(thickness, point1, point2);
+                shape = factory.Create(color, thickness, point1, point2);
                 shape.DrawInCanvas(point1, point2, canvas);
             }
 
@@ -98,13 +99,13 @@ namespace ZPaint
         private void butLab1_Click(object sender, RoutedEventArgs e)
         {
             ListFigures list = new ListFigures();
-            list.Add(new Line(thickness, new Point(50, 50), new Point(50, 200)));
-            list.Add(new Rectangle(thickness, new Point(60, 50), new Point(150, 200)));
-            list.Add(new Ellipse(thickness, new Point(170, 50), new Point(300, 200)));
-            list.Add(new Square(thickness, new Point(310, 50), new Point(400, 200)));
-            list.Add(new Circle(thickness, new Point(500, 50), new Point(600, 200)));
-            list.Add(new Triangle(thickness, new Point(680, 50), new Point(780, 200)));
-            list.Add(new Hexagon(thickness, new Point(800, 50), new Point(900, 200)));       
+            list.Add(new Line(color, thickness, new Point(50, 50), new Point(50, 200)));
+            list.Add(new Rectangle(color, thickness, new Point(60, 50), new Point(150, 200)));
+            list.Add(new Ellipse(color, thickness, new Point(170, 50), new Point(300, 200)));
+            list.Add(new Square(color, thickness, new Point(310, 50), new Point(400, 200)));
+            list.Add(new Circle(color, thickness, new Point(500, 50), new Point(600, 200)));
+            list.Add(new Triangle(color, thickness, new Point(680, 50), new Point(780, 200)));
+            list.Add(new Hexagon(color, thickness, new Point(800, 50), new Point(900, 200)));       
             list.Draw(canvas);
         }
 
@@ -123,6 +124,22 @@ namespace ZPaint
                 thickness = 3;
             }
 
+        }
+
+        private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if ((cbColor.SelectedIndex == 0) || (cbColor.SelectedIndex == 1))
+            {
+                color = Brushes.Black;
+            }
+            if (cbColor.SelectedIndex == 1)
+            {
+                color = Brushes.Blue;
+            }
+            if (cbColor.SelectedIndex == 2)
+            {
+                color = Brushes.Red;
+            }
         }
     }
 }

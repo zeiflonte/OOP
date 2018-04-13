@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
 
 namespace ZPaint
 {
     public class Square : Rectangle
     {
-        public Square(int thickness, Point point1, Point point2) : base(thickness, point1, point2)
+        public Square(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
         { }
 
-        protected override void SetScales(int thickness)
+        protected override void SetScales()
         {
-            this.thickness = thickness;
             Height = Math.Abs(point1.Y - point2.Y);
             Width = Math.Abs(point1.X - point2.X);
             if (Width > Height)

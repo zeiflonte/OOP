@@ -17,20 +17,7 @@ namespace ZPaint
         protected Point point1;
         protected Point point2;
         protected int thickness;
-
-        private Color color;
-
-        public Color Color
-        {
-            get
-            {
-                return color;
-            }
-            set
-            {
-                color = value;
-            }
-        }
+        protected SolidColorBrush color;
 
         public double Height
         {
@@ -56,18 +43,21 @@ namespace ZPaint
             }
         }
 
-        public Shape(int thickness, Point point1, Point point2)
+        public Shape(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             figure = DrawFigure();
 
-            SetParameters(thickness, point1, point2); 
+            SetParameters(color, thickness, point1, point2); 
         }
 
-        protected virtual void SetParameters(int thinkness, Point point1, Point point2)
+        protected virtual void SetParameters(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
+            this.color = color;
+            this.thickness = thickness;
+
             SetPoints(point1, point2);
 
-            SetScales(thinkness);
+            SetScales();
 
             SetPosition();
         }
@@ -103,9 +93,8 @@ namespace ZPaint
             }                        
         }
 
-        protected virtual void SetScales(int thickness)
+        protected virtual void SetScales()
         {
-            this.thickness = thickness;
             Width = Math.Abs(point1.X - point2.X);
             Height = Math.Abs(point1.Y - point2.Y);
         }
@@ -118,7 +107,7 @@ namespace ZPaint
 
         public void DrawInCanvas(Point point1, Point point2, Canvas canvas)
         {
-            figure.Stroke = Brushes.Black;
+            figure.Stroke = color;
             figure.StrokeThickness = this.thickness;
             canvas.Children.Add(figure);
         }
