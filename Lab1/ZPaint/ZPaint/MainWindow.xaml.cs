@@ -22,7 +22,13 @@ namespace ZPaint
     public partial class MainWindow : Window
     {
         private Shape shape;
+        private Shape exShape;
+        private SolidColorBrush exColor;
+
         private Factory factory;
+        private ListFigures list = new ListFigures();
+
+        // Initial figure properties
 
         private Point point1;
         private Point point2;
@@ -33,6 +39,8 @@ namespace ZPaint
         {
             InitializeComponent();
         }
+
+        // Choose a type of a figure
 
         private void butCursor_Click(object sender, RoutedEventArgs e)
         {
@@ -76,42 +84,50 @@ namespace ZPaint
 
         private void canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            // Save the first position
+
+            point1 = e.GetPosition(canvas);
+
+            // Set a cursor type
+
             if (factory != null)
             {
                 Cursor = Cursors.Pen;
             }
-            point1 = e.GetPosition(canvas);
+            else
+            {
+                Cursor = Cursors.Arrow;
+            }
         }
 
         private void canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            point2 = e.GetPosition(canvas);
-
             if (factory != null)
             {
+
+                // Save the second position
+
+                point2 = e.GetPosition(canvas);
+        
+                // Create a new figure
+
                 shape = factory.Create(color, thickness, point1, point2);
+                list.Add(shape);
+                listShapes.Items.Add(shape);
                 shape.DrawInCanvas(point1, point2, canvas);
+
+                // Reset initial settings
+
+                shape = null;
+                Cursor = Cursors.Arrow;
             }
-
-            Cursor = Cursors.Arrow;
-        }
-
-        private void butLab1_Click(object sender, RoutedEventArgs e)
-        {
-            ListFigures list = new ListFigures();
-            list.Add(new Line(color, thickness, new Point(50, 50), new Point(50, 200)));
-            list.Add(new Rectangle(color, thickness, new Point(60, 50), new Point(150, 200)));
-            list.Add(new Ellipse(color, thickness, new Point(170, 50), new Point(300, 200)));
-            list.Add(new Square(color, thickness, new Point(310, 50), new Point(400, 200)));
-            list.Add(new Circle(color, thickness, new Point(500, 50), new Point(600, 200)));
-            list.Add(new Triangle(color, thickness, new Point(680, 50), new Point(780, 200)));
-            list.Add(new Hexagon(color, thickness, new Point(800, 50), new Point(900, 200)));       
-            list.Draw(canvas);
         }
 
         private void cbThickness_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if ((cbThickness.SelectedIndex == 0) || (cbThickness.SelectedIndex == 1))
+            // Choose a thickness of a figure
+
+            if ((cbThickness.SelectedIndex == -1) || (cbThickness.SelectedIndex == 0))
             {
                 thickness = 1;
             }
@@ -124,11 +140,21 @@ namespace ZPaint
                 thickness = 3;
             }
 
+            // Change parameters of an already existing figure
+
+            if (shape != null)
+            {
+                shape.SetThickness(thickness);
+                list.Draw(canvas);
+            }
         }
 
         private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if ((cbColor.SelectedIndex == 0) || (cbColor.SelectedIndex == 1))
+
+            // Choose a color of a figure
+
+            if ((cbColor.SelectedIndex == -1) || (cbColor.SelectedIndex == 0))
             {
                 color = Brushes.Black;
             }
@@ -140,6 +166,37 @@ namespace ZPaint
             {
                 color = Brushes.Red;
             }
+
+            // Change parameters of an already existing figure
+
+            if (shape != null)
+            {
+                shape.SetColor(color);
+                exColor = shape.color;
+                list.Draw(canvas);
+            }
         }
+
+        private void listShapes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Restore a previous color
+
+            if (exShape != null)
+            {
+                exShape.color = exColor;
+            }
+            shape = listShapes.SelectedItem as Shape;
+
+            // Save the previous color
+
+            exShape = shape;
+            exColor = shape.color;
+
+            // Illuminate a selected figure
+
+            shape.color = Brushes.Pink;
+            list.Draw(canvas);
+        }
+
     }
 }

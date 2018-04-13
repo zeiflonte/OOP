@@ -14,7 +14,7 @@ namespace ZPaint
     {
         public System.Windows.Shapes.Shape figure;
 
-        protected Point point1;
+        public Point point1;
         protected Point point2;
         public int thickness;
         public SolidColorBrush color;
@@ -50,16 +50,27 @@ namespace ZPaint
             SetParameters(color, thickness, point1, point2); 
         }
 
-        protected virtual void SetParameters(SolidColorBrush color, int thickness, Point point1, Point point2)
+        public virtual void SetParameters(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
-            this.color = color;
-            this.thickness = thickness;
+            SetColor(color);
+
+            SetThickness(thickness);
 
             SetPoints(point1, point2);
 
             SetScales();
 
             SetPosition();
+        }
+
+        public void SetColor(SolidColorBrush color)
+        {
+            this.color = color;
+        }
+
+        public void SetThickness(int thickness)
+        {
+            this.thickness = thickness;
         }
 
         private void SetPoints(Point point1, Point point2)
