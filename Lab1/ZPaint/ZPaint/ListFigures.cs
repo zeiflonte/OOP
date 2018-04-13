@@ -23,6 +23,11 @@ namespace ZPaint
         {
             list.Add(figure);
         }
+
+        public void Remove(Shape figure)
+        {
+            list.Remove(figure);
+        }
     
         public void Clear()
         {

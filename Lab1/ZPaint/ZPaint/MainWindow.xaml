@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ZPaint"
         mc:Ignorable="d"
-        Title="ZPaint" Height="707" Width="1050" ResizeMode="NoResize">
+        Title="ZPaint" Height="707" Width="1050" ResizeMode="NoResize" KeyDown="Window_KeyDown">
     <Grid>
 
         <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3"/>

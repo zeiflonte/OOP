@@ -189,14 +189,28 @@ namespace ZPaint
 
             // Save the previous color
 
-            exShape = shape;
-            exColor = shape.color;
+            if (shape != null)
+            {
+                exShape = shape;
+                exColor = shape.color;
 
-            // Illuminate a selected figure
+                // Illuminate a selected figure
 
-            shape.color = Brushes.Pink;
+                shape.color = Brushes.Pink;
+            }
+
             list.Draw(canvas);
         }
 
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((e.Key == Key.Delete) && (listShapes.SelectedIndex != -1))
+            {
+                // Delete a selected figure
+
+                list.Remove(shape);
+                listShapes.Items.Remove(listShapes.SelectedItem);
+            }
+        }
     }
 }
