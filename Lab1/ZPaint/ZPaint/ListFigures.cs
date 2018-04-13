@@ -21,6 +21,8 @@ namespace ZPaint
 
         public void Add(Shape figure)
         {
+            figure.figure.Stroke = figure.color;
+            figure.figure.StrokeThickness = figure.thickness;
             list.Add(figure);
         }
 
@@ -33,7 +35,6 @@ namespace ZPaint
         {
             foreach (Shape figure in list)
             {
-                figure.figure.Stroke = Brushes.Black;
                 canvas.Children.Add(figure.figure);
             }
         }

@@ -16,8 +16,8 @@ namespace ZPaint
 
         protected Point point1;
         protected Point point2;
-        protected int thickness;
-        protected SolidColorBrush color;
+        public int thickness;
+        public SolidColorBrush color;
 
         public double Height
         {

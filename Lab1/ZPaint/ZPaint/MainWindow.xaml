@@ -8,7 +8,9 @@
         Title="MainWindow" Height="707" Width="1050">
     <Grid>
 
-        <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3"/>
+        <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3">
+            <Button x:Name="butLab1" Content="Lab1" HorizontalAlignment="Left" Height="23" Margin="955,9,0,0" VerticalAlignment="Top" Width="67" Click="butLab1_Click"/>
+        </Border>
         <Button x:Name="butRectangle" Content="▭" HorizontalAlignment="Left" Height="23" Margin="129,636,0,0" VerticalAlignment="Top" Width="23" Click="butRectangle_Click" RenderTransformOrigin="0.522,0.522"/>
         <ComboBox x:Name="cbThickness" HorizontalAlignment="Left" Height="23" Margin="353,636,0,0" VerticalAlignment="Top" Width="111" SelectionChanged="cbThickness_SelectionChanged">
             <ComboBoxItem Content="Thin" IsSelected="True"/>
