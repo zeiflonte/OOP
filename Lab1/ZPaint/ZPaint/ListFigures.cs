@@ -21,11 +21,14 @@ namespace ZPaint
 
         public void Add(Shape figure)
         {
-            figure.figure.Stroke = figure.color;
-            figure.figure.StrokeThickness = figure.thickness;
             list.Add(figure);
         }
 
+        public void Remove(Shape figure)
+        {
+            list.Remove(figure);
+        }
+    
         public void Clear()
         {
             list.Clear();
@@ -33,8 +36,17 @@ namespace ZPaint
 
         public void Draw(Canvas canvas)
         {
+            canvas.Children.Clear();
             foreach (Shape figure in list)
             {
+
+                // Settings for a canvas
+
+                figure.figure.Stroke = figure.color;
+                figure.figure.StrokeThickness = figure.thickness;
+
+                // Draw a figure on the canvas
+
                 canvas.Children.Add(figure.figure);
             }
         }
