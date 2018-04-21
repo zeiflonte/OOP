@@ -24,16 +24,6 @@ namespace ZPaint
     /// Interaction logic for MainWindow.xaml
     /// </summary>
 
-    [DataContract]
-    internal class Person
-    {
-        [DataMember]
-        internal string name;
-
-        [DataMember]
-        internal int age;
-    }
-
     public partial class MainWindow : Window
     {
         private Shape shape;
@@ -235,35 +225,21 @@ namespace ZPaint
             }
         }
 
-      /*  struct ShapeInfo
-        {
-            public Type factoryType;
-            public PointCollection point;
-            public Color fcolor, scolor;
-            public double strokeThickness;
-            public double angle;
-            public double offsetX, offsetY;
-        }
+        // Temporary structure aimed to hold data from .json file entries
 
-        private ShapeInfo SaveInfo(Shape shape)
+        struct ShapeImage
         {
-            ShapeInfo info;
-            info.factoryType = shape.factory.GetType();
-            info.point = shape.point;
-            info.scolor = shape.color;
-            info.fcolor = shape.fcolor;
-            info.offsetX = shape.OffsetX;
-            info.offsetY = shape.OffsetY;
-            info.angle = shape.Angle;
-            info.strokeThickness = shape.strokeThickness;
-            return info;
-        }*/
+            public Type FactoryType;
+            public Point point1;
+            public Point point2;
+            public int thickness;
+            public SolidColorBrush color;
+            
+        }
 
         private void butSave_Click(object sender, RoutedEventArgs e)
         {
-           /* Person p = new Person();
-            p.name = "John";
-            p.age = 42;*/
+            // Open a save file dialogue
 
             SaveFileDialog fileSave = new SaveFileDialog
             {
@@ -271,8 +247,9 @@ namespace ZPaint
                 RestoreDirectory = true,
             };
             if (fileSave.ShowDialog() == true)
-            { 
-               // FileStream stream = new FileStream(fileSave.FileName, FileMode.Create);
+            {
+                // Serialization of figures
+
                 JsonSerializer jsonSerializer = new JsonSerializer();
 
                 string filename = fileSave.FileName;
@@ -284,21 +261,24 @@ namespace ZPaint
                         list.Serialize(jsonSerializer, stream, writer);
                     }
                 }
-
-                // JsonWriter writer = new JsonTextWriter(stream);
-
-                // DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Rectangle), <Type> ty);
-
-                //list.Serialize(jsonSerializer, stream);
-
-               // stream.Close();
             }
 
+            fileSave = null;
+        }
 
+        private void DeleteFigures()
+        {
+            list.Clear();
+            listShapes.Items.Clear();
+            canvas.Children.Clear();
         }
 
         private void butLoad_Click(object sender, RoutedEventArgs e)
         {
+            DeleteFigures();
+
+            // Open a load file dialogue
+
             OpenFileDialog fileOpen = new OpenFileDialog
             {
                 Filter = "JSON File (*.json)|*.json|All Files (*.*)|*.*",
@@ -306,12 +286,41 @@ namespace ZPaint
             };
             if (fileOpen.ShowDialog() == true)
             {
-                FileStream stream = new FileStream(fileOpen.FileName, FileMode.Open);
-                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Shape));
+                // Deserialization of figures
 
-                list.Deserialize(jsonSerializer, stream);
-                stream.Close();
-                list.Draw(canvas);
+                JsonSerializer jsonSerializer = new JsonSerializer();
+
+                string fileName = fileOpen.FileName;
+
+                using (StreamReader stream = new StreamReader(fileName))
+                {
+                    string data = stream.ReadToEnd();
+                    {
+                        string[] dataArray = data.Split('\n');
+                        foreach (string dataBlock in dataArray)
+                        {
+                            try
+                            {
+                                ShapeImage image = JsonConvert.DeserializeObject<ShapeImage>(dataBlock, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Include });
+
+                                // Create a figure
+
+                                Factory factory = (Factory)Activator.CreateInstance(image.FactoryType);
+                                shape = factory.Create(image.color, image.thickness, image.point1, image.point2);
+                                list.Add(shape);
+                                listShapes.Items.Add(shape);
+                                shape.DrawInCanvas(point1, point2, canvas);
+                                shape = null;
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                fileOpen = null;
             }
         }
     }

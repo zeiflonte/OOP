@@ -17,19 +17,30 @@ namespace ZPaint
         public System.Windows.Shapes.Shape figure;
 
         [DataMember]
-        protected Type factoryType; 
+        private Type factoryType; 
         [DataMember]
         public Point point1;
         [DataMember]
-        protected Point point2;
+        public Point point2;
         [DataMember]
         public int thickness;
         [DataMember]
         public SolidColorBrush color;
-        [DataMember]
+        
         protected Point[] points;
 
-        [DataMember]
+        public Type FactoryType
+        {
+            get
+            {
+                return factoryType;
+            }
+            set
+            {
+                factoryType = value;
+            }
+        }
+
         public double Height
         {
             get
@@ -41,7 +52,7 @@ namespace ZPaint
                 figure.Height = value;
             }
         }
-        [DataMember]
+        
         public double Width
         {
             get

@@ -8,6 +8,8 @@
         Title="ZPaint" Height="707" Width="1050" ResizeMode="NoResize" KeyDown="Window_KeyDown">
     <Grid>
 
+        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="626" VerticalAlignment="Top" Width="889" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp"/>
+
         <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3"/>
         <Button x:Name="butRectangle" Content="▭" HorizontalAlignment="Left" Height="23" Margin="129,636,0,0" VerticalAlignment="Top" Width="23" Click="butRectangle_Click" RenderTransformOrigin="0.522,0.522"/>
         <Button x:Name="butSave" Content="Save" HorizontalAlignment="Left" Height="23" Margin="855,636,0,0" VerticalAlignment="Top" Width="70" Click="butSave_Click"/>
@@ -19,15 +21,13 @@
         <Button x:Name="butCursor" Content="➤" HorizontalAlignment="Left" Height="23" Margin="10,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="0.783,0.522" Click="butCursor_Click"/>
         <Button x:Name="butTriangle" Content="△" HorizontalAlignment="Left" Height="23" Margin="251,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="2.087,0.522" Click="butTriangle_Click"/>
 
-        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="626" VerticalAlignment="Top" Width="889" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp"/>
         <Button x:Name="butSquare" Content="▢" HorizontalAlignment="Left" Height="23" Margin="90,636,0,0" VerticalAlignment="Top" Width="23" Click="butSquare_Click" RenderTransformOrigin="0.174,0.783"/>
         <ComboBox x:Name="cbThickness" HorizontalAlignment="Left" Height="23" Margin="353,636,0,0" VerticalAlignment="Top" Width="111" SelectionChanged="cbThickness_SelectionChanged">
             <ComboBoxItem Content="Thin" IsSelected="True"/>
             <ComboBoxItem Content="Medium"/>
             <ComboBoxItem Content="Thick"/>
         </ComboBox>
-        <ComboBox x:Name="cbColor" HorizontalAlignment="Left" Height="23" Margin="500,636,0,0" VerticalAlignment="Top" Width="111
-                  " SelectionChanged="comboBox_SelectionChanged">
+        <ComboBox x:Name="cbColor" HorizontalAlignment="Left" Height="23" Margin="500,636,0,0" VerticalAlignment="Top" Width="111                   " SelectionChanged="comboBox_SelectionChanged">
             <ComboBoxItem Content="Black" IsSelected="True"/>
             <ComboBoxItem Content="Blue"/>
             <ComboBoxItem Content="Red"/>
