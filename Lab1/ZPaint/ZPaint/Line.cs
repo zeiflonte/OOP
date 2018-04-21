@@ -5,11 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
+using System.Runtime.Serialization;
 
 namespace ZPaint
 {
+    [Serializable]
     public class Line : Shape
     {
+        [DataMember]
         public double X1
         {
             get
@@ -21,6 +24,7 @@ namespace ZPaint
                 ((System.Windows.Shapes.Line)figure).X1 = value;
             }
         }
+        [DataMember]
         public double X2
         {
             get
@@ -32,6 +36,7 @@ namespace ZPaint
                 ((System.Windows.Shapes.Line)figure).X2 = value;
             }
         }
+        [DataMember]
         public double Y1
         {
             get
@@ -43,6 +48,7 @@ namespace ZPaint
                 ((System.Windows.Shapes.Line)figure).Y1 = value;
             }
         }
+        [DataMember]
         public double Y2
         {
             get

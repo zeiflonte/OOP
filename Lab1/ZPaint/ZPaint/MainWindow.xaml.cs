@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,12 +13,25 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using System.Runtime.Serialization.Json;
+using System.Runtime.Serialization;
 
 namespace ZPaint
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+
+    [DataContract]
+    internal class Person
+    {
+        [DataMember]
+        internal string name;
+
+        [DataMember]
+        internal int age;
+    }
 
     public partial class MainWindow : Window
     {
@@ -118,7 +132,7 @@ namespace ZPaint
 
                 // Reset initial settings
 
-                shape = null;
+               // shape = null;
                 Cursor = Cursors.Arrow;
             }
         }
@@ -153,19 +167,26 @@ namespace ZPaint
         {
 
             // Choose a color of a figure
+            var dic = new Dictionary<String, SolidColorBrush>();
+            dic.Add("Black", Brushes.Black);
 
-            if ((cbColor.SelectedIndex == -1) || (cbColor.SelectedIndex == 0))
-            {
-                color = Brushes.Black;
-            }
-            if (cbColor.SelectedIndex == 1)
-            {
-                color = Brushes.Blue;
-            }
-            if (cbColor.SelectedIndex == 2)
-            {
-                color = Brushes.Red;
-            }
+            dic.Add("Blue", Brushes.Blue);
+
+            dic.Add("Red", Brushes.Red);
+            String selectedValue = (String)((ComboBoxItem)cbColor.SelectedItem).Content;
+            color = dic[selectedValue];
+            //if ((cbColor.SelectedIndex == -1) || (cbColor.SelectedIndex == 0))
+            //{
+            //    color = Brushes.Black;
+            //}
+            //if (cbColor.SelectedIndex == 1)
+            //{
+            //    color = Brushes.Blue;
+            //}
+            //if (cbColor.SelectedIndex == 2)
+            //{
+            //    color = Brushes.Red;
+            //}
 
             // Change parameters of an already existing figure
 
@@ -210,6 +231,73 @@ namespace ZPaint
 
                 list.Remove(shape);
                 listShapes.Items.Remove(listShapes.SelectedItem);
+            }
+        }
+
+      /*  struct ShapeInfo
+        {
+            public Type factoryType;
+            public PointCollection point;
+            public Color fcolor, scolor;
+            public double strokeThickness;
+            public double angle;
+            public double offsetX, offsetY;
+        }
+
+        private ShapeInfo SaveInfo(Shape shape)
+        {
+            ShapeInfo info;
+            info.factoryType = shape.factory.GetType();
+            info.point = shape.point;
+            info.scolor = shape.color;
+            info.fcolor = shape.fcolor;
+            info.offsetX = shape.OffsetX;
+            info.offsetY = shape.OffsetY;
+            info.angle = shape.Angle;
+            info.strokeThickness = shape.strokeThickness;
+            return info;
+        }*/
+
+        private void butSave_Click(object sender, RoutedEventArgs e)
+        {
+           /* Person p = new Person();
+            p.name = "John";
+            p.age = 42;*/
+
+            SaveFileDialog fileSave = new SaveFileDialog
+            {
+                Filter = "JSON File (*.json)|*.json|All Files (*.*)|*.*",
+                RestoreDirectory = true,
+            };
+            if (fileSave.ShowDialog() == true)
+            { 
+                FileStream stream = new FileStream(fileSave.FileName, FileMode.Create);
+               
+                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Rectangle));
+
+                list.Serialize(jsonSerializer, stream);
+
+                stream.Close();
+            }
+
+
+        }
+
+        private void butLoad_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog fileOpen = new OpenFileDialog
+            {
+                Filter = "JSON File (*.json)|*.json|All Files (*.*)|*.*",
+                RestoreDirectory = true,
+            };
+            if (fileOpen.ShowDialog() == true)
+            {
+                FileStream stream = new FileStream(fileOpen.FileName, FileMode.Open);
+                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Shape));
+
+                list.Deserialize(jsonSerializer, stream);
+                stream.Close();
+                list.Draw(canvas);
             }
         }
     }

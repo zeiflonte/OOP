@@ -8,6 +8,7 @@ using System.Windows.Media;
 
 namespace ZPaint
 {
+    [Serializable]
     public class Square : Rectangle
     {
         public Square(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)

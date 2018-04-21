@@ -10,11 +10,8 @@
 
         <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3"/>
         <Button x:Name="butRectangle" Content="▭" HorizontalAlignment="Left" Height="23" Margin="129,636,0,0" VerticalAlignment="Top" Width="23" Click="butRectangle_Click" RenderTransformOrigin="0.522,0.522"/>
-        <ComboBox x:Name="cbThickness" HorizontalAlignment="Left" Height="23" Margin="353,636,0,0" VerticalAlignment="Top" Width="111" SelectionChanged="cbThickness_SelectionChanged">
-            <ComboBoxItem Content="Thin" IsSelected="True"/>
-            <ComboBoxItem Content="Medium"/>
-            <ComboBoxItem Content="Thick"/>
-        </ComboBox>
+        <Button x:Name="butSave" Content="Save" HorizontalAlignment="Left" Height="23" Margin="855,636,0,0" VerticalAlignment="Top" Width="70" Click="butSave_Click"/>
+        <Button x:Name="butLoad" Content="Load" HorizontalAlignment="Left" Height="23" Margin="945,636,0,0" VerticalAlignment="Top" Width="70" Click="butLoad_Click"/>
         <Button x:Name="butEllipse" Content="⬭" HorizontalAlignment="Left" Height="23" Margin="209,636,0,0" VerticalAlignment="Top" Width="23" Click="butEllipse_Click" RenderTransformOrigin="0.5,0.5"/>
         <Button x:Name="butLine" Content="—" HorizontalAlignment="Left" Height="23" Margin="50,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="0.783,0.522" Click="butLine_Click"/>
         <Button x:Name="butCircle" Content="○" HorizontalAlignment="Left" Height="23" Margin="169,636,0,0" VerticalAlignment="Top" Width="23" RenderTransformOrigin="0.174,0.478" Click="butCircle_Click"/>
@@ -24,13 +21,18 @@
 
         <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="626" VerticalAlignment="Top" Width="889" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp"/>
         <Button x:Name="butSquare" Content="▢" HorizontalAlignment="Left" Height="23" Margin="90,636,0,0" VerticalAlignment="Top" Width="23" Click="butSquare_Click" RenderTransformOrigin="0.174,0.783"/>
+        <ComboBox x:Name="cbThickness" HorizontalAlignment="Left" Height="23" Margin="353,636,0,0" VerticalAlignment="Top" Width="111" SelectionChanged="cbThickness_SelectionChanged">
+            <ComboBoxItem Content="Thin" IsSelected="True"/>
+            <ComboBoxItem Content="Medium"/>
+            <ComboBoxItem Content="Thick"/>
+        </ComboBox>
         <ComboBox x:Name="cbColor" HorizontalAlignment="Left" Height="23" Margin="500,636,0,0" VerticalAlignment="Top" Width="111
                   " SelectionChanged="comboBox_SelectionChanged">
             <ComboBoxItem Content="Black" IsSelected="True"/>
             <ComboBoxItem Content="Blue"/>
             <ComboBoxItem Content="Red"/>
         </ComboBox>
-        <ListBox x:Name="listShapes" Margin="889,-2,3,54" SelectionChanged="listShapes_SelectionChanged">
+        <ListBox x:Name="listShapes" Margin="894,-5,-2,57" SelectionChanged="listShapes_SelectionChanged">
             <ListBox.BorderBrush>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black" Offset="0"/>

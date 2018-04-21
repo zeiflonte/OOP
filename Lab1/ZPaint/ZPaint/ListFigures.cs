@@ -7,6 +7,8 @@ using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Runtime.Serialization.Json;
+using System.IO;
 
 namespace ZPaint
 {
@@ -34,12 +36,24 @@ namespace ZPaint
             list.Clear();
         }
 
+        public void Serialize(DataContractJsonSerializer jsonSerializer, FileStream stream)
+        {
+            foreach (Shape figure in list)
+            {
+                jsonSerializer.WriteObject(stream, figure);
+            }
+        }
+
+        public void Deserialize(DataContractJsonSerializer jsonSerializer, FileStream stream)
+        {
+            list.Add((Shape)jsonSerializer.ReadObject(stream));
+        }
+
         public void Draw(Canvas canvas)
         {
             canvas.Children.Clear();
             foreach (Shape figure in list)
             {
-
                 // Settings for a canvas
 
                 figure.figure.Stroke = figure.color;

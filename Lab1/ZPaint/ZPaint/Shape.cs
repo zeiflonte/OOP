@@ -7,18 +7,24 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Runtime.Serialization;
 
 namespace ZPaint
 {
+    [DataContract]
     public abstract class Shape
     {
         public System.Windows.Shapes.Shape figure;
-
+        [DataMember]
         public Point point1;
+        [DataMember]
         protected Point point2;
+        [DataMember]
         public int thickness;
+        
         public SolidColorBrush color;
 
+        [DataMember]
         public double Height
         {
             get
@@ -30,12 +36,12 @@ namespace ZPaint
                 figure.Height = value;
             }
         }
-
+        [DataMember]
         public double Width
         {
             get
             {
-                return figure.Height;
+                return figure.Width;
             }
             set
             {
