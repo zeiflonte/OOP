@@ -132,18 +132,14 @@ namespace ZPaint
         {
             // Choose a thickness of a figure
 
-            if ((cbThickness.SelectedIndex == -1) || (cbThickness.SelectedIndex == 0))
-            {
-                thickness = 1;
-            }
-            if (cbThickness.SelectedIndex == 1)
-            {
-                thickness = 2;
-            }
-            if (cbThickness.SelectedIndex == 2)
-            {
-                thickness = 3;
-            }
+            var dic = new Dictionary<String, int>();
+            dic.Add("Thin", 1);
+
+            dic.Add("Medium", 2);
+
+            dic.Add("Thick", 3);
+            String selectedValue = (String)((ComboBoxItem)cbThickness.SelectedItem).Content;
+            thickness = dic[selectedValue];
 
             // Change parameters of an already existing figure
 
@@ -158,6 +154,7 @@ namespace ZPaint
         {
 
             // Choose a color of a figure
+
             var dic = new Dictionary<String, SolidColorBrush>();
             dic.Add("Black", Brushes.Black);
 
@@ -165,19 +162,7 @@ namespace ZPaint
 
             dic.Add("Red", Brushes.Red);
             String selectedValue = (String)((ComboBoxItem)cbColor.SelectedItem).Content;
-            color = dic[selectedValue];
-            //if ((cbColor.SelectedIndex == -1) || (cbColor.SelectedIndex == 0))
-            //{
-            //    color = Brushes.Black;
-            //}
-            //if (cbColor.SelectedIndex == 1)
-            //{
-            //    color = Brushes.Blue;
-            //}
-            //if (cbColor.SelectedIndex == 2)
-            //{
-            //    color = Brushes.Red;
-            //}
+            color = dic[selectedValue];  
 
             // Change parameters of an already existing figure
 
