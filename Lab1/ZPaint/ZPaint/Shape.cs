@@ -7,17 +7,39 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Runtime.Serialization;
 
 namespace ZPaint
 {
+    [DataContract]
     public abstract class Shape
     {
         public System.Windows.Shapes.Shape figure;
 
+        [DataMember]
+        private Type factoryType; 
+        [DataMember]
         public Point point1;
-        protected Point point2;
+        [DataMember]
+        public Point point2;
+        [DataMember]
         public int thickness;
+        [DataMember]
         public SolidColorBrush color;
+        
+        protected Point[] points;
+
+        public Type FactoryType
+        {
+            get
+            {
+                return factoryType;
+            }
+            set
+            {
+                factoryType = value;
+            }
+        }
 
         public double Height
         {
@@ -30,12 +52,12 @@ namespace ZPaint
                 figure.Height = value;
             }
         }
-
+        
         public double Width
         {
             get
             {
-                return figure.Height;
+                return figure.Width;
             }
             set
             {
@@ -43,9 +65,11 @@ namespace ZPaint
             }
         }
 
-        public Shape(SolidColorBrush color, int thickness, Point point1, Point point2)
+        public Shape(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             figure = DrawFigure();
+
+            SetFactoryType(factoryType);
 
             SetParameters(color, thickness, point1, point2); 
         }
@@ -61,6 +85,11 @@ namespace ZPaint
             SetScales();
 
             SetPosition();
+        }
+
+        protected virtual void SetFactoryType(Type _factoryType)
+        {
+            factoryType = _factoryType;
         }
 
         public void SetColor(SolidColorBrush color)

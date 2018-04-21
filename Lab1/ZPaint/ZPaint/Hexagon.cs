@@ -8,9 +8,10 @@ using System.Windows.Media;
 
 namespace ZPaint
 {
+    [Serializable]
     public class Hexagon : Polygon
     {
-        public Hexagon(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        public Hexagon(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factoryType, color, thickness, point1, point2)
         {
         }
 
@@ -39,6 +40,7 @@ namespace ZPaint
                 new Point(0, 0.75 * Height),
                 new Point(0, 0.25 * Height),
             };
+            points = hexagon;
             return hexagon;
         }
     }

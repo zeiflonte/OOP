@@ -10,7 +10,7 @@ namespace ZPaint
 {
     public class Triangle : Polygon
     {
-        public Triangle(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        public Triangle(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factoryType, color, thickness, point1, point2)
         { }
 
         protected override Point[] DrawPolygon()
@@ -21,6 +21,7 @@ namespace ZPaint
                 new Point(point2.X - point1.X, point2.Y - point1.Y),
                 new Point(0, point2.Y - point1.Y)
             };
+            points = triangle;
             return triangle;
         }
     }

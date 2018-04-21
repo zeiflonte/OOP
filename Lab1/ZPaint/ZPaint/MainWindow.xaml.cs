@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using System.Runtime.Serialization.Json;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace ZPaint
 {
@@ -153,19 +158,26 @@ namespace ZPaint
         {
 
             // Choose a color of a figure
+            var dic = new Dictionary<String, SolidColorBrush>();
+            dic.Add("Black", Brushes.Black);
 
-            if ((cbColor.SelectedIndex == -1) || (cbColor.SelectedIndex == 0))
-            {
-                color = Brushes.Black;
-            }
-            if (cbColor.SelectedIndex == 1)
-            {
-                color = Brushes.Blue;
-            }
-            if (cbColor.SelectedIndex == 2)
-            {
-                color = Brushes.Red;
-            }
+            dic.Add("Blue", Brushes.Blue);
+
+            dic.Add("Red", Brushes.Red);
+            String selectedValue = (String)((ComboBoxItem)cbColor.SelectedItem).Content;
+            color = dic[selectedValue];
+            //if ((cbColor.SelectedIndex == -1) || (cbColor.SelectedIndex == 0))
+            //{
+            //    color = Brushes.Black;
+            //}
+            //if (cbColor.SelectedIndex == 1)
+            //{
+            //    color = Brushes.Blue;
+            //}
+            //if (cbColor.SelectedIndex == 2)
+            //{
+            //    color = Brushes.Red;
+            //}
 
             // Change parameters of an already existing figure
 
@@ -210,6 +222,105 @@ namespace ZPaint
 
                 list.Remove(shape);
                 listShapes.Items.Remove(listShapes.SelectedItem);
+            }
+        }
+
+        // Temporary structure aimed to hold data from .json file entries
+
+        struct ShapeImage
+        {
+            public Type FactoryType;
+            public Point point1;
+            public Point point2;
+            public int thickness;
+            public SolidColorBrush color;
+            
+        }
+
+        private void butSave_Click(object sender, RoutedEventArgs e)
+        {
+            // Open a save file dialogue
+
+            SaveFileDialog fileSave = new SaveFileDialog
+            {
+                Filter = "JSON File (*.json)|*.json|All Files (*.*)|*.*",
+                RestoreDirectory = true,
+            };
+            if (fileSave.ShowDialog() == true)
+            {
+                // Serialization of figures
+
+                JsonSerializer jsonSerializer = new JsonSerializer();
+
+                string filename = fileSave.FileName;
+
+                using (StreamWriter stream = new StreamWriter(filename))
+                {
+                    using (JsonWriter writer = new JsonTextWriter(stream))
+                    {
+                        list.Serialize(jsonSerializer, stream, writer);
+                    }
+                }
+            }
+
+            fileSave = null;
+        }
+
+        private void DeleteFigures()
+        {
+            list.Clear();
+            listShapes.Items.Clear();
+            canvas.Children.Clear();
+        }
+
+        private void butLoad_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteFigures();
+
+            // Open a load file dialogue
+
+            OpenFileDialog fileOpen = new OpenFileDialog
+            {
+                Filter = "JSON File (*.json)|*.json|All Files (*.*)|*.*",
+                RestoreDirectory = true,
+            };
+            if (fileOpen.ShowDialog() == true)
+            {
+                // Deserialization of figures
+
+                JsonSerializer jsonSerializer = new JsonSerializer();
+
+                string fileName = fileOpen.FileName;
+
+                using (StreamReader stream = new StreamReader(fileName))
+                {
+                    string data = stream.ReadToEnd();
+                    {
+                        string[] dataArray = data.Split('\n');
+                        foreach (string dataBlock in dataArray)
+                        {
+                            try
+                            {
+                                ShapeImage image = JsonConvert.DeserializeObject<ShapeImage>(dataBlock, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Include });
+
+                                // Create a figure
+
+                                Factory factory = (Factory)Activator.CreateInstance(image.FactoryType);
+                                shape = factory.Create(image.color, image.thickness, image.point1, image.point2);
+                                list.Add(shape);
+                                listShapes.Items.Add(shape);
+                                shape.DrawInCanvas(point1, point2, canvas);
+                                shape = null;
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                }
+
+                fileOpen = null;
             }
         }
     }
