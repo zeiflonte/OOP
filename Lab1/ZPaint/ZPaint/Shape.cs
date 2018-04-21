@@ -15,14 +15,19 @@ namespace ZPaint
     public abstract class Shape
     {
         public System.Windows.Shapes.Shape figure;
+
+        [DataMember]
+        protected Type factoryType; 
         [DataMember]
         public Point point1;
         [DataMember]
         protected Point point2;
         [DataMember]
         public int thickness;
-        
+        [DataMember]
         public SolidColorBrush color;
+        [DataMember]
+        protected Point[] points;
 
         [DataMember]
         public double Height
@@ -49,9 +54,11 @@ namespace ZPaint
             }
         }
 
-        public Shape(SolidColorBrush color, int thickness, Point point1, Point point2)
+        public Shape(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             figure = DrawFigure();
+
+            SetFactoryType(factoryType);
 
             SetParameters(color, thickness, point1, point2); 
         }
@@ -67,6 +74,11 @@ namespace ZPaint
             SetScales();
 
             SetPosition();
+        }
+
+        protected virtual void SetFactoryType(Type _factoryType)
+        {
+            factoryType = _factoryType;
         }
 
         public void SetColor(SolidColorBrush color)

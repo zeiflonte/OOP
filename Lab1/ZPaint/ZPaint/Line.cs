@@ -61,7 +61,7 @@ namespace ZPaint
             }
         }
 
-        public Line(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        public Line(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factoryType, color, thickness, point1, point2)
         { }
 
         public override void SetParameters(SolidColorBrush color, int thickness, Point point1, Point point2)

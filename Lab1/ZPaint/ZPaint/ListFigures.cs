@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Runtime.Serialization.Json;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace ZPaint
 {
@@ -36,11 +37,20 @@ namespace ZPaint
             list.Clear();
         }
 
-        public void Serialize(DataContractJsonSerializer jsonSerializer, FileStream stream)
+        public int Count()
         {
-            foreach (Shape figure in list)
+            return list.Count();
+        }
+
+        public void Serialize(JsonSerializer jsonSerializer, StreamWriter stream, JsonWriter writer)
+        {
+            for (int i = 0; i < list.Count(); i++)
             {
-                jsonSerializer.WriteObject(stream, figure);
+                jsonSerializer.Serialize(writer, list[i]);
+                if (i != list.Count() - 1)
+                {
+                    stream.Write("\n");
+                }
             }
         }
 

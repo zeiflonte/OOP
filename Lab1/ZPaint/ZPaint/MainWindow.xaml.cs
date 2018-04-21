@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace ZPaint
 {
@@ -132,7 +133,7 @@ namespace ZPaint
 
                 // Reset initial settings
 
-               // shape = null;
+                shape = null;
                 Cursor = Cursors.Arrow;
             }
         }
@@ -271,13 +272,26 @@ namespace ZPaint
             };
             if (fileSave.ShowDialog() == true)
             { 
-                FileStream stream = new FileStream(fileSave.FileName, FileMode.Create);
-               
-                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Rectangle));
+               // FileStream stream = new FileStream(fileSave.FileName, FileMode.Create);
+                JsonSerializer jsonSerializer = new JsonSerializer();
 
-                list.Serialize(jsonSerializer, stream);
+                string filename = fileSave.FileName;
 
-                stream.Close();
+                using (StreamWriter stream = new StreamWriter(filename))
+                {
+                    using (JsonWriter writer = new JsonTextWriter(stream))
+                    {
+                        list.Serialize(jsonSerializer, stream, writer);
+                    }
+                }
+
+                // JsonWriter writer = new JsonTextWriter(stream);
+
+                // DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(Rectangle), <Type> ty);
+
+                //list.Serialize(jsonSerializer, stream);
+
+               // stream.Close();
             }
 
 
