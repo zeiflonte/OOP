@@ -219,7 +219,6 @@ namespace ZPaint
             public Point point2;
             public int thickness;
             public SolidColorBrush color;
-            
         }
 
         private void butSave_Click(object sender, RoutedEventArgs e)
@@ -256,6 +255,7 @@ namespace ZPaint
             list.Clear();
             listShapes.Items.Clear();
             canvas.Children.Clear();
+            factory = null;
         }
 
         private void butLoad_Click(object sender, RoutedEventArgs e)
