@@ -17,6 +17,8 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Plugins;
+using System.Reflection;
 
 namespace ZPaint
 {
@@ -39,6 +41,8 @@ namespace ZPaint
         private Point point2;
         private int thickness;
         private SolidColorBrush color;
+
+        Dictionary<string, IPlugin> _Plugins;
 
         public MainWindow()
         {
@@ -210,6 +214,58 @@ namespace ZPaint
             }
         }
 
+        private void butPlugin_Click(object sender, RoutedEventArgs e)
+        {
+            // string pluginPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Plugins");
+            OpenFileDialog openDialog = new OpenFileDialog();
+            if (openDialog.ShowDialog() == true)
+            {
+               /* DirectoryInfo pluginDirectory = new DirectoryInfo(pluginPath);
+                if (!pluginDirectory.Exists)
+                {
+                    pluginDirectory.Create();
+                } */
+
+                Assembly.LoadFrom(openDialog.FileName);
+                foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    foreach (Type type in assembly.GetTypes())
+                    {
+                        if (type.GetInterface("IPlugin") != null)
+                        { 
+                            IPlugin plagin = Activator.CreateInstance(type) as IPlugin;
+                            MessageBox.Show(plagin.Name());
+                        }
+                    }
+                }
+            }
+           /* _Plugins = new Dictionary<string, IPlugin>();
+            ICollection<IPlugin> plugins = PluginLoader<IPlugin>.LoadPlugins(pluginPath);
+            foreach (var item in plugins)
+            {
+                _Plugins.Add(item.Name, item);
+
+                Button b = new Button();
+                b.Content = item.Name;
+                b.Click += b_Click;
+                Grid.Children.Add(b);
+            } */
+        }
+
+        private void b_Click(object sender, RoutedEventArgs e)
+        {
+            Button b = sender as Button;
+            if (b != null)
+            {
+                string key = b.Content.ToString();
+                if (_Plugins.ContainsKey(key))
+                {
+                    IPlugin plugin = _Plugins[key];
+                    factory = new FactoryHexagon();
+                }
+            }
+        }
+
         // Temporary structure aimed to hold data from .json file entries
 
         struct ShapeImage
@@ -308,5 +364,6 @@ namespace ZPaint
                 fileOpen = null;
             }
         }
+
     }
 }

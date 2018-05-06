@@ -66,6 +66,7 @@
     <Compile Include="Hexagon.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="ListFigures.cs" />
+    <Compile Include="PluginLoader.cs" />
     <Compile Include="Polygon.cs" />
     <Compile Include="Rectangle.cs" />
     <Compile Include="Shape.cs" />
@@ -111,6 +112,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Plugins\Plugins\Plugins.csproj">
+      <Project>{e980bae2-4f4b-40a9-838f-84389d7430ef}</Project>
+      <Name>Plugins</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

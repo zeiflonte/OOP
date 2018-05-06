@@ -6,11 +6,13 @@
         xmlns:local="clr-namespace:ZPaint"
         mc:Ignorable="d"
         Title="ZPaint" Height="707" Width="1050" ResizeMode="NoResize" KeyDown="Window_KeyDown">
-    <Grid>
+    <Grid x:Name="Grid">
 
         <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="626" VerticalAlignment="Top" Width="889" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp"/>
 
-        <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3"/>
+        <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3">
+            <Button x:Name="butPlugin" Content="Plugins" HorizontalAlignment="Left" Height="23" Margin="763,9,0,0" VerticalAlignment="Top" Width="70" Click="butPlugin_Click"/>
+        </Border>
         <Button x:Name="butRectangle" Content="▭" HorizontalAlignment="Left" Height="23" Margin="129,636,0,0" VerticalAlignment="Top" Width="23" Click="butRectangle_Click" RenderTransformOrigin="0.522,0.522"/>
         <Button x:Name="butSave" Content="Save" HorizontalAlignment="Left" Height="23" Margin="855,636,0,0" VerticalAlignment="Top" Width="70" Click="butSave_Click"/>
         <Button x:Name="butLoad" Content="Load" HorizontalAlignment="Left" Height="23" Margin="945,636,0,0" VerticalAlignment="Top" Width="70" Click="butLoad_Click"/>
