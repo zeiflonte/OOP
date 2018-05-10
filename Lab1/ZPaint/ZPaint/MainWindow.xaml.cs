@@ -17,7 +17,6 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using Plugins;
 using System.Reflection;
 
 namespace ZPaint
@@ -42,7 +41,7 @@ namespace ZPaint
         private int thickness;
         private SolidColorBrush color;
 
-        Dictionary<string, IPlugin> _Plugins;
+        Dictionary<string, IPluginFigure> _Plugins;
 
         public MainWindow()
         {
@@ -51,46 +50,46 @@ namespace ZPaint
 
         // Choose a type of a figure
 
-        private void butCursor_Click(object sender, RoutedEventArgs e)
+        private void cbitCursor_Selected(object sender, RoutedEventArgs e)
         {
             factory = null;
         }
 
-        private void butLine_Click(object sender, RoutedEventArgs e)
+        private void cbitLine_Selected(object sender, RoutedEventArgs e)
         {
             factory = new FactoryLine();
         }
 
-        private void butSquare_Click(object sender, RoutedEventArgs e)
-        {
-            factory = new FactorySquare();
-        }
-
-        private void butRectangle_Click(object sender, RoutedEventArgs e)
+        private void cbitRectangle_Selected(object sender, RoutedEventArgs e)
         {
             factory = new FactoryRectangle();
         }
 
-        private void butCircle_Click(object sender, RoutedEventArgs e)
+        private void cbitSquare_Selected(object sender, RoutedEventArgs e)
         {
-            factory = new FactoryCircle();
+            factory = new FactorySquare();
         }
 
-        private void butEllipse_Click(object sender, RoutedEventArgs e)
+        private void cbitOval_Selected(object sender, RoutedEventArgs e)
         {
             factory = new FactoryEllipse();
         }
 
-        private void butTriangle_Click(object sender, RoutedEventArgs e)
+        private void cbitCircle_Selected(object sender, RoutedEventArgs e)
+        {
+            factory = new FactoryCircle();
+        }
+
+        private void cbitTriangle_Selected(object sender, RoutedEventArgs e)
         {
             factory = new FactoryTriangle();
         }
 
-        private void butHexagon_Click(object sender, RoutedEventArgs e)
+        private void cbitHexagon_Selected(object sender, RoutedEventArgs e)
         {
             factory = new FactoryHexagon();
         }
-
+ 
         private void canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Save the first position
@@ -216,7 +215,6 @@ namespace ZPaint
 
         private void butPlugin_Click(object sender, RoutedEventArgs e)
         {
-            // string pluginPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "Plugins");
             OpenFileDialog openDialog = new OpenFileDialog();
             if (openDialog.ShowDialog() == true)
             {
@@ -231,10 +229,14 @@ namespace ZPaint
                 {
                     foreach (Type type in assembly.GetTypes())
                     {
-                        if (type.GetInterface("IPlugin") != null)
-                        { 
-                            IPlugin plagin = Activator.CreateInstance(type) as IPlugin;
-                            MessageBox.Show(plagin.Name());
+                        if (type.GetInterface("IPluginFactory") != null)
+                        {
+                            var plugin = (Factory)Activator.CreateInstance(type);
+                            factory = plugin;
+                           // IPluginFactory plagin = (Factory)Activator.CreateInstance(type) as IPluginFactory;
+                           // Factory factory = (Factory)Activator.CreateInstance(type);
+                            // MessageBox.Show(plagin.Name());
+                            // plagin = (Factory)Activator.CreateInstance(type);
                         }
                     }
                 }
@@ -260,7 +262,7 @@ namespace ZPaint
                 string key = b.Content.ToString();
                 if (_Plugins.ContainsKey(key))
                 {
-                    IPlugin plugin = _Plugins[key];
+                    IPluginFigure plugin = _Plugins[key];
                     factory = new FactoryHexagon();
                 }
             }
@@ -353,8 +355,9 @@ namespace ZPaint
                                 shape.DrawInCanvas(point1, point2, canvas);
                                 shape = null;
                             }
-                            catch
+                            catch (Exception ex)
                             {
+                                MessageBox.Show(ex.Message);
                                 continue;
                             }
                         }
@@ -364,6 +367,5 @@ namespace ZPaint
                 fileOpen = null;
             }
         }
-
     }
 }

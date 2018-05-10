@@ -13,7 +13,7 @@ namespace ZPaint
         public Triangle(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factoryType, color, thickness, point1, point2)
         { }
 
-        protected override Point[] DrawPolygon()
+        public override Point[] DrawPolygon()
         {
             Point[] triangle = new Point[3]
             {

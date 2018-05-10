@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace ZPaint
 {
-    abstract class Factory
+    abstract public class Factory
     {
         protected Type factoryType;
         public abstract Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2);
