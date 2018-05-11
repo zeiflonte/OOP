@@ -29,7 +29,7 @@ namespace ZPaint
             }
         }
 
-        protected override Point[] DrawPolygon()
+        public override Point[] DrawPolygon()
         {
             Point[] hexagon = new Point[]
             {

@@ -17,6 +17,7 @@ using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using System.Reflection;
 
 namespace ZPaint
 {
@@ -40,53 +41,60 @@ namespace ZPaint
         private int thickness;
         private SolidColorBrush color;
 
+        Dictionary<string, Factory> Plugins = new Dictionary<String, Factory>();
+        private int amountOfPlugins = 0;
+
+        public static string pluginsPath = "../../../Plugins";
+        // public static string pluginsPath = "../../../Pentagon/bin/Debug";
+
         public MainWindow()
         {
             InitializeComponent();
+            addPlugins();
         }
 
         // Choose a type of a figure
 
-        private void butCursor_Click(object sender, RoutedEventArgs e)
+        private void cbitCursor_Selected(object sender, RoutedEventArgs e)
         {
             factory = null;
         }
 
-        private void butLine_Click(object sender, RoutedEventArgs e)
+        private void cbitLine_Selected(object sender, RoutedEventArgs e)
         {
             factory = new FactoryLine();
         }
 
-        private void butSquare_Click(object sender, RoutedEventArgs e)
-        {
-            factory = new FactorySquare();
-        }
-
-        private void butRectangle_Click(object sender, RoutedEventArgs e)
+        private void cbitRectangle_Selected(object sender, RoutedEventArgs e)
         {
             factory = new FactoryRectangle();
         }
 
-        private void butCircle_Click(object sender, RoutedEventArgs e)
+        private void cbitSquare_Selected(object sender, RoutedEventArgs e)
         {
-            factory = new FactoryCircle();
+            factory = new FactorySquare();
         }
 
-        private void butEllipse_Click(object sender, RoutedEventArgs e)
+        private void cbitOval_Selected(object sender, RoutedEventArgs e)
         {
             factory = new FactoryEllipse();
         }
 
-        private void butTriangle_Click(object sender, RoutedEventArgs e)
+        private void cbitCircle_Selected(object sender, RoutedEventArgs e)
+        {
+            factory = new FactoryCircle();
+        }
+
+        private void cbitTriangle_Selected(object sender, RoutedEventArgs e)
         {
             factory = new FactoryTriangle();
         }
 
-        private void butHexagon_Click(object sender, RoutedEventArgs e)
+        private void cbitHexagon_Selected(object sender, RoutedEventArgs e)
         {
             factory = new FactoryHexagon();
         }
-
+ 
         private void canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Save the first position
@@ -132,18 +140,14 @@ namespace ZPaint
         {
             // Choose a thickness of a figure
 
-            if ((cbThickness.SelectedIndex == -1) || (cbThickness.SelectedIndex == 0))
-            {
-                thickness = 1;
-            }
-            if (cbThickness.SelectedIndex == 1)
-            {
-                thickness = 2;
-            }
-            if (cbThickness.SelectedIndex == 2)
-            {
-                thickness = 3;
-            }
+            var dic = new Dictionary<String, int>();
+            dic.Add("Thin", 1);
+
+            dic.Add("Medium", 2);
+
+            dic.Add("Thick", 3);
+            String selectedValue = (String)((ComboBoxItem)cbThickness.SelectedItem).Content;
+            thickness = dic[selectedValue];
 
             // Change parameters of an already existing figure
 
@@ -158,6 +162,7 @@ namespace ZPaint
         {
 
             // Choose a color of a figure
+
             var dic = new Dictionary<String, SolidColorBrush>();
             dic.Add("Black", Brushes.Black);
 
@@ -165,19 +170,7 @@ namespace ZPaint
 
             dic.Add("Red", Brushes.Red);
             String selectedValue = (String)((ComboBoxItem)cbColor.SelectedItem).Content;
-            color = dic[selectedValue];
-            //if ((cbColor.SelectedIndex == -1) || (cbColor.SelectedIndex == 0))
-            //{
-            //    color = Brushes.Black;
-            //}
-            //if (cbColor.SelectedIndex == 1)
-            //{
-            //    color = Brushes.Blue;
-            //}
-            //if (cbColor.SelectedIndex == 2)
-            //{
-            //    color = Brushes.Red;
-            //}
+            color = dic[selectedValue];  
 
             // Change parameters of an already existing figure
 
@@ -197,6 +190,7 @@ namespace ZPaint
             {
                 exShape.color = exColor;
             }
+
             shape = listShapes.SelectedItem as Shape;
 
             // Save the previous color
@@ -214,6 +208,15 @@ namespace ZPaint
             list.Draw(canvas);
         }
 
+        private void listShapes_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (exShape != null)
+            {
+                exShape.color = exColor;
+                list.Draw(canvas);
+            }
+        }
+
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if ((e.Key == Key.Delete) && (listShapes.SelectedIndex != -1))
@@ -225,6 +228,113 @@ namespace ZPaint
             }
         }
 
+        Factory plugin;
+
+      /*  private void deletePlugins()
+        {
+            var count = cbFactory.Items.Count - 1;
+            for (int i = count; i >= count - amountOfPlugins + 1; i--)
+            {
+                cbFactory.Items.RemoveAt(i);
+            }
+            amountOfPlugins = 0;
+        } */
+
+        private void addPlugins()
+        {
+            // Create a plugin directory if it does not exist
+
+            DirectoryInfo pluginsDirectory = new DirectoryInfo(pluginsPath);
+            if (!pluginsDirectory.Exists)
+            {
+                pluginsDirectory.Create();
+                pluginsDirectory.Attributes = FileAttributes.Directory;
+            }
+
+            // Get names of .dll files in the plugin directory
+
+            string[] pluginFiles = Directory.GetFiles(pluginsPath, "*.dll");
+
+            try
+            {
+                foreach (var pluginFile in pluginFiles)
+                {
+                    try
+                    {
+                        // Load assembly
+
+                        Assembly assembly = Assembly.LoadFrom(pluginFile);
+                        var _type = typeof(IPluginFactory);
+
+                        // Get all types that implement an interface
+
+                        var types = assembly.GetTypes()
+                            .Where(p => _type.IsAssignableFrom(p));
+
+                        foreach (var type in types)
+                        {
+                            // Add instances of received types implementing factories in the program
+
+                            plugin = (Factory)Activator.CreateInstance(type);
+
+                            ComboBoxItem item = new ComboBoxItem();
+                            item.Content = plugin.PluginName();
+
+                            Plugins.Add(plugin.PluginName(), plugin);
+
+                            cbFactory.Items.Add(item);
+
+                            amountOfPlugins++;
+                        }
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (Exception exSub in ex.LoaderExceptions)
+                {
+                    sb.AppendLine(exSub.Message);
+                    FileNotFoundException exFileNotFound = exSub as FileNotFoundException;
+                    if (exFileNotFound != null)
+                    {
+                        if (!string.IsNullOrEmpty(exFileNotFound.FusionLog))
+                        {
+                            sb.AppendLine("Fusion Log:");
+                            sb.AppendLine(exFileNotFound.FusionLog);
+                        }
+                    }
+                    sb.AppendLine();
+                }
+                string errorMessage = sb.ToString();
+                MessageBox.Show(errorMessage);
+            }
+        }
+
+        private void cbFactory_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            foreach (var plugin in Plugins)
+            {
+                // Set selected custom factory
+                if (plugin.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
+                {
+                    factory = plugin.Value;
+                    break;
+                }
+            }
+        }
+
+        private void mitReload_Click(object sender, RoutedEventArgs e)
+        {
+           // deletePlugins();
+           // addPlugins();
+        }
+
         // Temporary structure aimed to hold data from .json file entries
 
         struct ShapeImage
@@ -234,11 +344,18 @@ namespace ZPaint
             public Point point2;
             public int thickness;
             public SolidColorBrush color;
-            
         }
 
-        private void butSave_Click(object sender, RoutedEventArgs e)
+        private void mitSave_Click(object sender, RoutedEventArgs e)
         {
+            // Restore original color of an illuminated figure
+
+            if (exShape != null)
+            {
+                exShape.color = exColor;
+                list.Draw(canvas);
+            }
+
             // Open a save file dialogue
 
             SaveFileDialog fileSave = new SaveFileDialog
@@ -271,9 +388,12 @@ namespace ZPaint
             list.Clear();
             listShapes.Items.Clear();
             canvas.Children.Clear();
+
+            factory = null;
+            cbFactory.SelectedIndex = 0;
         }
 
-        private void butLoad_Click(object sender, RoutedEventArgs e)
+        private void mitOpen_Click(object sender, RoutedEventArgs e)
         {
             DeleteFigures();
 
@@ -312,8 +432,9 @@ namespace ZPaint
                                 shape.DrawInCanvas(point1, point2, canvas);
                                 shape = null;
                             }
-                            catch
+                            catch (Exception ex)
                             {
+                                MessageBox.Show(ex.Message);
                                 continue;
                             }
                         }

@@ -64,6 +64,9 @@
     <Compile Include="Ellipse.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="Hexagon.cs" />
+    <Compile Include="IPluginFactory.cs" />
+    <Compile Include="IPluginInfo.cs" />
+    <Compile Include="IPluginFigure.cs" />
     <Compile Include="Line.cs" />
     <Compile Include="ListFigures.cs" />
     <Compile Include="Polygon.cs" />

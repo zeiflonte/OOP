@@ -21,6 +21,6 @@ namespace ZPaint
             return new System.Windows.Shapes.Polygon();
         }
 
-        protected abstract Point[] DrawPolygon();
+        public abstract Point[] DrawPolygon();
     }
 }
