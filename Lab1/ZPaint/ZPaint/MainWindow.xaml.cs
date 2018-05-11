@@ -41,11 +41,14 @@ namespace ZPaint
         private int thickness;
         private SolidColorBrush color;
 
-        Dictionary<string, IPluginFigure> _Plugins;
+        // Dictionary<string, IPluginFigure> _Plugins;
+        // public static string pluginsPath = "../../../Plugins";
+        public static string pluginsPath = "../../../Star/bin/Debug";
 
         public MainWindow()
         {
             InitializeComponent();
+            addPlugins();
         }
 
         // Choose a type of a figure
@@ -185,6 +188,7 @@ namespace ZPaint
             {
                 exShape.color = exColor;
             }
+
             shape = listShapes.SelectedItem as Shape;
 
             // Save the previous color
@@ -202,6 +206,24 @@ namespace ZPaint
             list.Draw(canvas);
         }
 
+        private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (exShape != null)
+            {
+                exShape.color = exColor;
+                list.Draw(canvas);
+            }
+        }
+
+        private void listShapes_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (exShape != null)
+            {
+                exShape.color = exColor;
+                list.Draw(canvas);
+            }
+        }
+
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if ((e.Key == Key.Delete) && (listShapes.SelectedIndex != -1))
@@ -213,60 +235,82 @@ namespace ZPaint
             }
         }
 
-        private void butPlugin_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openDialog = new OpenFileDialog();
-            if (openDialog.ShowDialog() == true)
-            {
-               /* DirectoryInfo pluginDirectory = new DirectoryInfo(pluginPath);
-                if (!pluginDirectory.Exists)
-                {
-                    pluginDirectory.Create();
-                } */
+        IPluginFactory plugin;
 
-                Assembly.LoadFrom(openDialog.FileName);
-                foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+        private void addPlugins()
+        {
+                DirectoryInfo pluginsDirectory = new DirectoryInfo(pluginsPath);
+                if (!pluginsDirectory.Exists)
+                {                
+                    pluginsDirectory.Create();
+                    pluginsDirectory.Attributes = FileAttributes.Directory;
+                }
+
+                string[] pluginFiles = Directory.GetFiles(pluginsPath, "*.dll");
+
+                try
                 {
-                    foreach (Type type in assembly.GetTypes())
+                    foreach (var pluginFile in pluginFiles)
                     {
-                        if (type.GetInterface("IPluginFactory") != null)
+                        Assembly.LoadFrom(pluginFile);
+                        foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
                         {
-                            var plugin = (Factory)Activator.CreateInstance(type);
-                            factory = plugin;
-                           // IPluginFactory plagin = (Factory)Activator.CreateInstance(type) as IPluginFactory;
-                           // Factory factory = (Factory)Activator.CreateInstance(type);
-                            // MessageBox.Show(plagin.Name());
-                            // plagin = (Factory)Activator.CreateInstance(type);
+                            foreach (Type type in assembly.GetTypes())
+                            {
+                                if (type.GetInterface("IPluginFactory") != null)
+                                {
+                                    plugin = (Factory)Activator.CreateInstance(type) as IPluginFactory;
+
+                                    ComboBoxItem item = new ComboBoxItem();
+                                    item.Content = plugin;
+                                    // item.Content = plugin.PluginName();
+                                    item.Selected += comboBoxItemHandler;
+
+                                    cbFactory.Items.Add(item);        
+                                }
+                            }
                         }
                     }
+
                 }
-            }
-           /* _Plugins = new Dictionary<string, IPlugin>();
-            ICollection<IPlugin> plugins = PluginLoader<IPlugin>.LoadPlugins(pluginPath);
-            foreach (var item in plugins)
-            {
-                _Plugins.Add(item.Name, item);
-
-                Button b = new Button();
-                b.Content = item.Name;
-                b.Click += b_Click;
-                Grid.Children.Add(b);
-            } */
-        }
-
-        private void b_Click(object sender, RoutedEventArgs e)
-        {
-            Button b = sender as Button;
-            if (b != null)
-            {
-                string key = b.Content.ToString();
-                if (_Plugins.ContainsKey(key))
+                catch (ReflectionTypeLoadException ex)
                 {
-                    IPluginFigure plugin = _Plugins[key];
-                    factory = new FactoryHexagon();
+                    StringBuilder sb = new StringBuilder();
+                    foreach (Exception exSub in ex.LoaderExceptions)
+                    {
+                        sb.AppendLine(exSub.Message);
+                        FileNotFoundException exFileNotFound = exSub as FileNotFoundException;
+                        if (exFileNotFound != null)
+                        {
+                            if (!string.IsNullOrEmpty(exFileNotFound.FusionLog))
+                            {
+                                sb.AppendLine("Fusion Log:");
+                                sb.AppendLine(exFileNotFound.FusionLog);
+                            }
+                        }
+                        sb.AppendLine();
+                    }
+                    string errorMessage = sb.ToString();
+                    MessageBox.Show(errorMessage);
                 }
-            }
+
+            /* _Plugins = new Dictionary<string, IPlugin>();
+             ICollection<IPlugin> plugins = PluginLoader<IPlugin>.LoadPlugins(pluginPath);
+             foreach (var item in plugins)
+             {
+                 _Plugins.Add(item.Name, item);
+
+                 Button b = new Button();
+                 b.Content = item.Name;
+                 b.Click += b_Click;
+                 Grid.Children.Add(b);
+             } */
         }
+
+        void comboBoxItemHandler(object sender, EventArgs e)
+        {
+            factory = (Factory)plugin;
+        }      
 
         // Temporary structure aimed to hold data from .json file entries
 

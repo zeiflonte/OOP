@@ -7,25 +7,25 @@ using System.Windows;
 using System.Windows.Media;
 using ZPaint;
 
-namespace Star
+namespace Pentagon
 {
-    class FactoryStar : Factory, IPluginFactory
+    class FactoryPentagon : Factory, IPluginFactory
     {
         public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
-            factoryType = typeof(FactoryStar);
+            factoryType = typeof(FactoryPentagon);
             return new Star(factoryType, color, thickness, point1, point2);
         }
 
-       /* public string PluginName()
-        {
-            return "☆ Star";
-        } */
+        /* public string PluginName()
+         {
+             return "⬠ Pentagon";
+         } */
     }
 
     public class Star : Polygon, IPluginFigure
     {
-        public Star (Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factoryType, color, thickness, point1, point2)
+        public Star(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factoryType, color, thickness, point1, point2)
         {
         }
 

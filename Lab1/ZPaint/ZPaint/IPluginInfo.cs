@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace ZPaint
 {
-    public interface IPlugin
+    public interface IPluginInfo
     {
-        string Name();
-        Shape Create(PointCollection point, Color fcolor, Color scolor, double strokeThickness);
+        string PluginName();
     }
 }
