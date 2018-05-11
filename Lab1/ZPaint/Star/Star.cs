@@ -9,7 +9,7 @@ using ZPaint;
 
 namespace Star
 {
-    class FactoryStar : Factory, IPluginFactory
+    public class FactoryStar : Factory, IPluginFactory
     {
         public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
@@ -17,10 +17,10 @@ namespace Star
             return new Star(factoryType, color, thickness, point1, point2);
         }
 
-       /* public string PluginName()
+        public override string PluginName()
         {
             return "☆ Star";
-        } */
+        } 
     }
 
     public class Star : Polygon, IPluginFigure
@@ -45,17 +45,16 @@ namespace Star
 
         public override Point[] DrawPolygon()
         {
-            Point[] hexagon = new Point[]
+            Point[] star = new Point[]
             {
                 new Point(0.5 * Width, 0),
                 new Point(0.85 * Width, Height),
                 new Point(0, 0.40 * Height),
                 new Point(Width, 0.40 * Height),
                 new Point(0.15 * Width, Height),
-                //new Point(0, 0.25 * Height),
             };
-            points = hexagon;
-            return hexagon;
+            points = star;
+            return star;
         }
     }
 }

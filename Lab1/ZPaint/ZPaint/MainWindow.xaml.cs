@@ -41,9 +41,11 @@ namespace ZPaint
         private int thickness;
         private SolidColorBrush color;
 
-        // Dictionary<string, IPluginFigure> _Plugins;
-        // public static string pluginsPath = "../../../Plugins";
-        public static string pluginsPath = "../../../Star/bin/Debug";
+        Dictionary<string, Factory> Plugins = new Dictionary<String, Factory>();
+        private int amountOfPlugins = 0;
+
+        public static string pluginsPath = "../../../Plugins";
+        // public static string pluginsPath = "../../../Pentagon/bin/Debug";
 
         public MainWindow()
         {
@@ -206,15 +208,6 @@ namespace ZPaint
             list.Draw(canvas);
         }
 
-        private void canvas_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (exShape != null)
-            {
-                exShape.color = exColor;
-                list.Draw(canvas);
-            }
-        }
-
         private void listShapes_LostFocus(object sender, RoutedEventArgs e)
         {
             if (exShape != null)
@@ -235,82 +228,112 @@ namespace ZPaint
             }
         }
 
-        IPluginFactory plugin;
+        Factory plugin;
+
+      /*  private void deletePlugins()
+        {
+            var count = cbFactory.Items.Count - 1;
+            for (int i = count; i >= count - amountOfPlugins + 1; i--)
+            {
+                cbFactory.Items.RemoveAt(i);
+            }
+            amountOfPlugins = 0;
+        } */
 
         private void addPlugins()
         {
-                DirectoryInfo pluginsDirectory = new DirectoryInfo(pluginsPath);
-                if (!pluginsDirectory.Exists)
-                {                
-                    pluginsDirectory.Create();
-                    pluginsDirectory.Attributes = FileAttributes.Directory;
-                }
+            // Create a plugin directory if it does not exist
 
-                string[] pluginFiles = Directory.GetFiles(pluginsPath, "*.dll");
+            DirectoryInfo pluginsDirectory = new DirectoryInfo(pluginsPath);
+            if (!pluginsDirectory.Exists)
+            {
+                pluginsDirectory.Create();
+                pluginsDirectory.Attributes = FileAttributes.Directory;
+            }
 
-                try
+            // Get names of .dll files in the plugin directory
+
+            string[] pluginFiles = Directory.GetFiles(pluginsPath, "*.dll");
+
+            try
+            {
+                foreach (var pluginFile in pluginFiles)
                 {
-                    foreach (var pluginFile in pluginFiles)
+                    try
                     {
-                        Assembly.LoadFrom(pluginFile);
-                        foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+                        // Load assembly
+
+                        Assembly assembly = Assembly.LoadFrom(pluginFile);
+                        var _type = typeof(IPluginFactory);
+
+                        // Get all types that implement an interface
+
+                        var types = assembly.GetTypes()
+                            .Where(p => _type.IsAssignableFrom(p));
+
+                        foreach (var type in types)
                         {
-                            foreach (Type type in assembly.GetTypes())
-                            {
-                                if (type.GetInterface("IPluginFactory") != null)
-                                {
-                                    plugin = (Factory)Activator.CreateInstance(type) as IPluginFactory;
+                            // Add instances of received types implementing factories in the program
 
-                                    ComboBoxItem item = new ComboBoxItem();
-                                    item.Content = plugin;
-                                    // item.Content = plugin.PluginName();
-                                    item.Selected += comboBoxItemHandler;
+                            plugin = (Factory)Activator.CreateInstance(type);
 
-                                    cbFactory.Items.Add(item);        
-                                }
-                            }
+                            ComboBoxItem item = new ComboBoxItem();
+                            item.Content = plugin.PluginName();
+
+                            Plugins.Add(plugin.PluginName(), plugin);
+
+                            cbFactory.Items.Add(item);
+
+                            amountOfPlugins++;
                         }
                     }
-
-                }
-                catch (ReflectionTypeLoadException ex)
-                {
-                    StringBuilder sb = new StringBuilder();
-                    foreach (Exception exSub in ex.LoaderExceptions)
+                    catch
                     {
-                        sb.AppendLine(exSub.Message);
-                        FileNotFoundException exFileNotFound = exSub as FileNotFoundException;
-                        if (exFileNotFound != null)
-                        {
-                            if (!string.IsNullOrEmpty(exFileNotFound.FusionLog))
-                            {
-                                sb.AppendLine("Fusion Log:");
-                                sb.AppendLine(exFileNotFound.FusionLog);
-                            }
-                        }
-                        sb.AppendLine();
+                        continue;
                     }
-                    string errorMessage = sb.ToString();
-                    MessageBox.Show(errorMessage);
                 }
 
-            /* _Plugins = new Dictionary<string, IPlugin>();
-             ICollection<IPlugin> plugins = PluginLoader<IPlugin>.LoadPlugins(pluginPath);
-             foreach (var item in plugins)
-             {
-                 _Plugins.Add(item.Name, item);
-
-                 Button b = new Button();
-                 b.Content = item.Name;
-                 b.Click += b_Click;
-                 Grid.Children.Add(b);
-             } */
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (Exception exSub in ex.LoaderExceptions)
+                {
+                    sb.AppendLine(exSub.Message);
+                    FileNotFoundException exFileNotFound = exSub as FileNotFoundException;
+                    if (exFileNotFound != null)
+                    {
+                        if (!string.IsNullOrEmpty(exFileNotFound.FusionLog))
+                        {
+                            sb.AppendLine("Fusion Log:");
+                            sb.AppendLine(exFileNotFound.FusionLog);
+                        }
+                    }
+                    sb.AppendLine();
+                }
+                string errorMessage = sb.ToString();
+                MessageBox.Show(errorMessage);
+            }
         }
 
-        void comboBoxItemHandler(object sender, EventArgs e)
+        private void cbFactory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            factory = (Factory)plugin;
-        }      
+            foreach (var plugin in Plugins)
+            {
+                // Set selected custom factory
+                if (plugin.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
+                {
+                    factory = plugin.Value;
+                    break;
+                }
+            }
+        }
+
+        private void mitReload_Click(object sender, RoutedEventArgs e)
+        {
+           // deletePlugins();
+           // addPlugins();
+        }
 
         // Temporary structure aimed to hold data from .json file entries
 
@@ -323,8 +346,16 @@ namespace ZPaint
             public SolidColorBrush color;
         }
 
-        private void butSave_Click(object sender, RoutedEventArgs e)
+        private void mitSave_Click(object sender, RoutedEventArgs e)
         {
+            // Restore original color of an illuminated figure
+
+            if (exShape != null)
+            {
+                exShape.color = exColor;
+                list.Draw(canvas);
+            }
+
             // Open a save file dialogue
 
             SaveFileDialog fileSave = new SaveFileDialog
@@ -357,10 +388,12 @@ namespace ZPaint
             list.Clear();
             listShapes.Items.Clear();
             canvas.Children.Clear();
+
             factory = null;
+            cbFactory.SelectedIndex = 0;
         }
 
-        private void butLoad_Click(object sender, RoutedEventArgs e)
+        private void mitOpen_Click(object sender, RoutedEventArgs e)
         {
             DeleteFigures();
 

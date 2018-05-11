@@ -7,12 +7,22 @@
         mc:Ignorable="d"
         Title="ZPaint" Height="707" Width="1050" ResizeMode="NoResize" KeyDown="Window_KeyDown">
     <Grid x:Name="Grid">
-
-        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="626" VerticalAlignment="Top" Width="889" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp" MouseDown="canvas_MouseDown"/>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem x:Name="mitFile" Header="_File">
+                    <MenuItem x:Name="mitOpen" Header="_Open" Click="mitOpen_Click"/>
+                    <MenuItem x:Name="mitSave" Header="_Save" Click="mitSave_Click"/>
+                </MenuItem>
+                <MenuItem x:Name="mitPlugins" Header="_Plugins">
+                    <MenuItem x:Name="mitSetFolder" Header="_Set folder"/>
+                    <MenuItem x:Name="mitReload" Header="_Reload" Click="mitReload_Click"/>
+                </MenuItem>
+            </Menu>
+            <StackPanel></StackPanel>
+        </DockPanel>
+        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="608" VerticalAlignment="Top" Width="889" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp" MouseDown="listShapes_LostFocus" Margin="0,18,0,0"/>
 
         <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3"/>
-        <Button x:Name="butSave" Content="Save" HorizontalAlignment="Left" Height="23" Margin="855,636,0,0" VerticalAlignment="Top" Width="70" Click="butSave_Click"/>
-        <Button x:Name="butLoad" Content="Load" HorizontalAlignment="Left" Height="23" Margin="945,636,0,0" VerticalAlignment="Top" Width="70" Click="butLoad_Click"/>
         <ComboBox x:Name="cbThickness" HorizontalAlignment="Left" Height="23" Margin="353,636,0,0" VerticalAlignment="Top" Width="111" SelectionChanged="cbThickness_SelectionChanged">
             <ComboBoxItem Content="Thin" IsSelected="True"/>
             <ComboBoxItem Content="Medium" FontWeight="Medium"/>
@@ -23,7 +33,7 @@
             <ComboBoxItem Content="Blue" Foreground="Blue"/>
             <ComboBoxItem Content="Red" Foreground="Red"/>
         </ComboBox>
-        <ListBox x:Name="listShapes" Margin="894,-5,-2,57" SelectionChanged="listShapes_SelectionChanged" LostFocus="listShapes_LostFocus">
+        <ListBox x:Name="listShapes" Margin="894,18,-2,57" SelectionChanged="listShapes_SelectionChanged" LostFocus="listShapes_LostFocus">
             <ListBox.BorderBrush>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="Black" Offset="0"/>
@@ -31,7 +41,7 @@
                 </LinearGradientBrush>
             </ListBox.BorderBrush>
         </ListBox>
-        <ComboBox x:Name="cbFactory" HorizontalAlignment="Left" Height="23" Margin="10,636,0,0" VerticalAlignment="Top" Width="111" SelectionChanged="cbThickness_SelectionChanged">
+        <ComboBox x:Name="cbFactory" HorizontalAlignment="Left" Height="23" Margin="10,636,0,0" VerticalAlignment="Top" Width="111" SelectionChanged="cbFactory_SelectionChanged">
             <ComboBoxItem x:Name="cbitCursor" Content="➤ Cursor" IsSelected="True" Selected="cbitCursor_Selected"/>
             <ComboBoxItem x:Name="cbitLine" Content="— Line" Selected="cbitLine_Selected"/>
             <ComboBoxItem x:Name="cbitRectangle" Content="▭ Rectangle" Selected="cbitRectangle_Selected"/>
