@@ -60,20 +60,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Circle.cs" />
-    <Compile Include="Ellipse.cs" />
-    <Compile Include="Factory.cs" />
-    <Compile Include="Hexagon.cs" />
-    <Compile Include="IPluginFactory.cs" />
-    <Compile Include="IPluginInfo.cs" />
-    <Compile Include="IPluginFigure.cs" />
-    <Compile Include="Line.cs" />
-    <Compile Include="ListFigures.cs" />
-    <Compile Include="Polygon.cs" />
-    <Compile Include="Rectangle.cs" />
-    <Compile Include="Shape.cs" />
-    <Compile Include="Square.cs" />
-    <Compile Include="Triangle.cs" />
+    <Compile Include="Figures\Circle.cs" />
+    <Compile Include="Figures\Ellipse.cs" />
+    <Compile Include="Factory\Factory.cs" />
+    <Compile Include="Figures\Hexagon.cs" />
+    <Compile Include="Figures\Square.cs" />
+    <Compile Include="Interfaces\IPluginFactory.cs" />
+    <Compile Include="Interfaces\IPluginInfo.cs" />
+    <Compile Include="Interfaces\IPluginFigure.cs" />
+    <Compile Include="Figures\Line.cs" />
+    <Compile Include="List\ListFigures.cs" />
+    <Compile Include="Figures\Polygon.cs" />
+    <Compile Include="Figures\Rectangle.cs" />
+    <Compile Include="Figures\Shape.cs" />
+    <Compile Include="Figures\Triangle.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -115,6 +115,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
