@@ -68,8 +68,8 @@ namespace ZPaint
         public MainWindow()
         {
             InitializeComponent();
-            addPlugins();
             XMLLoad();
+            addPlugins();
         }
 
         // Choose a type of a figure
@@ -166,7 +166,17 @@ namespace ZPaint
             dic.Add("Средний", 2);
             dic.Add("Thick", 3);
             dic.Add("Толстый", 3);
-            String selectedValue = (String)((ComboBoxItem)cbThickness.SelectedItem).Content;
+            string selectedValue;
+            try
+            {
+                selectedValue = (string)((ComboBoxItem)cbThickness.SelectedItem).Content;
+            }
+            catch (NullReferenceException)
+            {
+                cbThickness.SelectedIndex = 0;
+                selectedValue = (string)((ComboBoxItem)cbThickness.SelectedItem).Content;
+            }
+
             thickness = dic[selectedValue];
 
             // Change parameters of an already existing figure
@@ -190,7 +200,16 @@ namespace ZPaint
             dic.Add("Синий", Brushes.Blue);
             dic.Add("Red", Brushes.Red);
             dic.Add("Красный", Brushes.Red);
-            String selectedValue = (String)((ComboBoxItem)cbColor.SelectedItem).Content;
+            string selectedValue;
+            try
+            {
+                selectedValue = (string)((ComboBoxItem)cbColor.SelectedItem).Content;
+            }
+            catch (NullReferenceException)
+            {
+                cbColor.SelectedIndex = 0;
+                selectedValue = (string)((ComboBoxItem)cbColor.SelectedItem).Content;
+            }
             color = dic[selectedValue];  
 
             // Change parameters of an already existing figure
@@ -274,6 +293,8 @@ namespace ZPaint
 
             // Get names of .dll files in the plugin directory
 
+            string locale = GetLocale();
+
             string[] pluginFiles = Directory.GetFiles(pluginsPath, "*.dll");
 
             try
@@ -299,17 +320,19 @@ namespace ZPaint
                             plugin = (Factory)Activator.CreateInstance(type);
 
                             ComboBoxItem item = new ComboBoxItem();
-                            item.Content = plugin.PluginName();
 
-                            Plugins.Add(plugin.PluginName(), plugin);
+                            item.Content = plugin.PluginName(locale);
+
+                            Plugins.Add(plugin.PluginName(locale), plugin);
 
                             cbFactory.Items.Add(item);
 
                             amountOfPlugins++;
                         }
                     }
-                    catch
+                    catch (Exception e)
                     {
+                        MessageBox.Show(e.Message);
                         continue;
                     }
                 }
@@ -350,41 +373,33 @@ namespace ZPaint
             }
         }
 
-        void XMLconstuct()
-        {
-            XmlDocument xmlDocument = new XmlDocument();
-            XmlDeclaration xmlDeclaration = xmlDocument.CreateXmlDeclaration("1.0", "UTF-8", null);
-            XmlElement root = xmlDocument.DocumentElement;
-            xmlDocument.InsertBefore(xmlDeclaration, root);
-
-            XmlElement body = xmlDocument.CreateElement(string.Empty, "body", string.Empty);
-            xmlDocument.AppendChild(body);
-
-            XmlElement locale = xmlDocument.CreateElement(string.Empty, "locale", string.Empty);
-            XmlText localeValue = xmlDocument.CreateTextNode((String)((ComboBoxItem)cbLocale.SelectedItem).Content);
-            body.AppendChild(locale);
-            locale.AppendChild(localeValue);
-
-            XmlElement background = xmlDocument.CreateElement(string.Empty, "background", string.Empty);
-           // XmlText backgroundColor = xmlDocument.CreateTextNode(canvas.Background.ToString());
-            XmlText backgroundColor = xmlDocument.CreateTextNode((String)((ComboBoxItem)cbBackgroundColor.SelectedItem).Content);
-            body.AppendChild(background);
-            background.AppendChild(backgroundColor);
-
-            xmlDocument.Save("../../document.xml");
-        }
-
         void XMLLoad()
         {
-            XmlDocument xmlDocument = new XmlDocument();
-            xmlDocument.Load("../../document.xml");
+            try
+            {
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load("../../config.xml");
 
-            XmlNodeList localeValue = xmlDocument.GetElementsByTagName("locale");
-            cbLocale.Text = localeValue[0].InnerText;
+                XmlNodeList localeValue = xmlDocument.GetElementsByTagName("locale");
+                cbLocale.Text = localeValue[0].InnerText;
 
-            XmlNodeList backgroundColor = xmlDocument.GetElementsByTagName("background");
-            // BackgroundColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor[0].InnerText));
-            cbBackgroundColor.Text = backgroundColor[0].InnerText;
+                XmlNodeList thicknessValue = xmlDocument.GetElementsByTagName("thickness");
+                cbThickness.Text = thicknessValue[0].InnerText;
+                XmlNodeList colorValue = xmlDocument.GetElementsByTagName("color");
+                cbColor.Text = colorValue[0].InnerText;
+
+                XmlNodeList backgroundValue = xmlDocument.GetElementsByTagName("background");
+                // BackgroundColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor[0].InnerText));
+                cbBackgroundColor.Text = backgroundValue[0].InnerText;
+            }
+            catch (Exception ex)
+            {
+                if (ex is FileNotFoundException || ex is XmlException || ex is NullReferenceException)
+                {
+                    return;
+                }
+                throw;
+            }
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -402,13 +417,24 @@ namespace ZPaint
             body.AppendChild(locale);
             locale.AppendChild(localeValue);
 
+            XmlElement tools = xmlDocument.CreateElement(string.Empty, "tools", string.Empty); 
+            body.AppendChild(tools);
+            XmlElement thickness = xmlDocument.CreateElement(string.Empty, "thickness", string.Empty);
+            XmlText thicknessValue = xmlDocument.CreateTextNode((String)((ComboBoxItem)cbThickness.SelectedItem).Content);
+            tools.AppendChild(thickness);
+            thickness.AppendChild(thicknessValue);
+            XmlElement color = xmlDocument.CreateElement(string.Empty, "color", string.Empty);
+            XmlText colorValue = xmlDocument.CreateTextNode((String)((ComboBoxItem)cbColor.SelectedItem).Content);
+            tools.AppendChild(color);
+            color.AppendChild(colorValue);
+
             XmlElement background = xmlDocument.CreateElement(string.Empty, "background", string.Empty);
             // XmlText backgroundColor = xmlDocument.CreateTextNode(canvas.Background.ToString());
-            XmlText backgroundColor = xmlDocument.CreateTextNode((String)((ComboBoxItem)cbBackgroundColor.SelectedItem).Content);
+            XmlText backgroundValue = xmlDocument.CreateTextNode((String)((ComboBoxItem)cbBackgroundColor.SelectedItem).Content);
             body.AppendChild(background);
-            background.AppendChild(backgroundColor);
+            background.AppendChild(backgroundValue);
 
-            xmlDocument.Save("../../document.xml");
+            xmlDocument.Save("../../config.xml");
         }
 
         private void SetLocale(string _culture)
@@ -441,13 +467,27 @@ namespace ZPaint
             cbitBViolet.Content = rm.GetString("cbitBViolet", culture);
         }
 
-        private void cbLocale_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private string GetLocale()
         {
             var dic = new Dictionary<string, string>();
             dic.Add("English", "en-US");
             dic.Add("Русский", "ru-RU");
-            string selectedValue = (string)((ComboBoxItem)cbLocale.SelectedItem).Content;
-            SetLocale(dic[selectedValue]);
+            string selectedValue;
+            try
+            {
+                selectedValue = (string)((ComboBoxItem)cbLocale.SelectedItem).Content;
+            }
+            catch (NullReferenceException)
+            {
+                cbLocale.SelectedIndex = 0;
+                selectedValue = (string)((ComboBoxItem)cbLocale.SelectedItem).Content;
+            }
+            return dic[selectedValue];
+        }
+
+        private void cbLocale_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SetLocale(GetLocale());
         }
 
         private void cbBackgroundColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -461,7 +501,16 @@ namespace ZPaint
             dic.Add("Жёлтый", new SolidColorBrush(Colors.Yellow));
             dic.Add("Violet", new SolidColorBrush(Colors.Violet));
             dic.Add("Фиолетовый", new SolidColorBrush(Colors.Violet));
-            String selectedValue = (String)((ComboBoxItem)cbBackgroundColor.SelectedItem).Content;
+            string selectedValue;
+            try
+            {
+                selectedValue = (string)((ComboBoxItem)cbBackgroundColor.SelectedItem).Content;
+            }
+            catch (NullReferenceException)
+            {
+                cbBackgroundColor.SelectedIndex = 0;
+                selectedValue = (string)((ComboBoxItem)cbBackgroundColor.SelectedItem).Content;
+            }
             BackgroundColor = dic[selectedValue];
         }
 

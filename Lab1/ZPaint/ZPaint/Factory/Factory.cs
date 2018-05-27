@@ -12,7 +12,7 @@ namespace ZPaint
     {
         protected Type factoryType;
         public abstract Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2);
-        public virtual string PluginName()
+        public virtual string PluginName(string culture)
         {
             return "N/A";
         }
