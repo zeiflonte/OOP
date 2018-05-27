@@ -20,6 +20,8 @@ using Newtonsoft.Json;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
+using System.Resources;
+using System.Globalization;
 
 namespace ZPaint
 {
@@ -29,6 +31,8 @@ namespace ZPaint
 
     public partial class MainWindow : Window
     {
+        private CultureInfo culture;
+
         private Shape shape;
         private Shape exShape;
         private SolidColorBrush exColor;
@@ -157,10 +161,11 @@ namespace ZPaint
 
             var dic = new Dictionary<String, int>();
             dic.Add("Thin", 1);
-
+            dic.Add("Тонкий", 1);
             dic.Add("Medium", 2);
-
+            dic.Add("Средний", 2);
             dic.Add("Thick", 3);
+            dic.Add("Толстый", 3);
             String selectedValue = (String)((ComboBoxItem)cbThickness.SelectedItem).Content;
             thickness = dic[selectedValue];
 
@@ -180,10 +185,11 @@ namespace ZPaint
 
             var dic = new Dictionary<String, SolidColorBrush>();
             dic.Add("Black", Brushes.Black);
-
+            dic.Add("Чёрный", Brushes.Black);
             dic.Add("Blue", Brushes.Blue);
-
+            dic.Add("Синий", Brushes.Blue);
             dic.Add("Red", Brushes.Red);
+            dic.Add("Красный", Brushes.Red);
             String selectedValue = (String)((ComboBoxItem)cbColor.SelectedItem).Content;
             color = dic[selectedValue];  
 
@@ -354,24 +360,28 @@ namespace ZPaint
             XmlElement body = xmlDocument.CreateElement(string.Empty, "body", string.Empty);
             xmlDocument.AppendChild(body);
 
+            XmlElement locale = xmlDocument.CreateElement(string.Empty, "locale", string.Empty);
+            XmlText localeValue = xmlDocument.CreateTextNode((String)((ComboBoxItem)cbLocale.SelectedItem).Content);
+            body.AppendChild(locale);
+            locale.AppendChild(localeValue);
+
             XmlElement background = xmlDocument.CreateElement(string.Empty, "background", string.Empty);
-            XmlText backgroundColor = xmlDocument.CreateTextNode(canvas.Background.ToString());
+           // XmlText backgroundColor = xmlDocument.CreateTextNode(canvas.Background.ToString());
+            XmlText backgroundColor = xmlDocument.CreateTextNode((String)((ComboBoxItem)cbBackgroundColor.SelectedItem).Content);
             body.AppendChild(background);
             background.AppendChild(backgroundColor);
 
             xmlDocument.Save("../../document.xml");
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
-        {
-            //XMLconstuct();
-        }
-
         void XMLLoad()
         {
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.Load("../../document.xml");
-           
+
+            XmlNodeList localeValue = xmlDocument.GetElementsByTagName("locale");
+            cbLocale.Text = localeValue[0].InnerText;
+
             XmlNodeList backgroundColor = xmlDocument.GetElementsByTagName("background");
             // BackgroundColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor[0].InnerText));
             cbBackgroundColor.Text = backgroundColor[0].InnerText;
@@ -387,7 +397,13 @@ namespace ZPaint
             XmlElement body = xmlDocument.CreateElement(string.Empty, "body", string.Empty);
             xmlDocument.AppendChild(body);
 
+            XmlElement locale = xmlDocument.CreateElement(string.Empty, "locale", string.Empty);
+            XmlText localeValue = xmlDocument.CreateTextNode((String)((ComboBoxItem)cbLocale.SelectedItem).Content);
+            body.AppendChild(locale);
+            locale.AppendChild(localeValue);
+
             XmlElement background = xmlDocument.CreateElement(string.Empty, "background", string.Empty);
+            // XmlText backgroundColor = xmlDocument.CreateTextNode(canvas.Background.ToString());
             XmlText backgroundColor = xmlDocument.CreateTextNode((String)((ComboBoxItem)cbBackgroundColor.SelectedItem).Content);
             body.AppendChild(background);
             background.AppendChild(backgroundColor);
@@ -395,13 +411,56 @@ namespace ZPaint
             xmlDocument.Save("../../document.xml");
         }
 
+        private void SetLocale(string _culture)
+        {
+            culture = CultureInfo.CreateSpecificCulture(_culture);
+            ResourceManager rm = new ResourceManager("ZPaint.locale", typeof(MainWindow).Assembly);
+            mitFile.Header = rm.GetString("mitFile", culture);
+            mitOpen.Header = rm.GetString("mitOpen", culture);
+            mitSave.Header = rm.GetString("mitSave", culture);
+            mitPlugins.Header = rm.GetString("mitPlugins", culture);
+            mitSetFolder.Header = rm.GetString("mitSetFolder", culture);
+            mitReload.Header = rm.GetString("mitReload", culture);
+            cbitCursor.Content = rm.GetString("cbitCursor", culture);
+            cbitLine.Content = rm.GetString("cbitLine", culture);
+            cbitRectangle.Content = rm.GetString("cbitRectangle", culture);
+            cbitSquare.Content = rm.GetString("cbitSquare", culture);
+            cbitOval.Content = rm.GetString("cbitOval", culture);
+            cbitCircle.Content = rm.GetString("cbitCircle", culture);
+            cbitTriangle.Content = rm.GetString("cbitTriangle", culture);
+            cbitHexagon.Content = rm.GetString("cbitHexagon", culture);
+            cbitThin.Content = rm.GetString("cbitThin", culture);
+            cbitMedium.Content = rm.GetString("cbitMedium", culture);
+            cbitThick.Content = rm.GetString("cbitThick", culture);
+            cbitBlack.Content = rm.GetString("cbitBlack", culture);
+            cbitBlue.Content = rm.GetString("cbitBlue", culture);
+            cbitRed.Content = rm.GetString("cbitRed", culture);
+            cbitBWhite.Content = rm.GetString("cbitBWhite", culture);
+            cbitBGreen.Content = rm.GetString("cbitBGreen", culture);
+            cbitBYellow.Content = rm.GetString("cbitBYellow", culture);
+            cbitBViolet.Content = rm.GetString("cbitBViolet", culture);
+        }
+
+        private void cbLocale_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var dic = new Dictionary<string, string>();
+            dic.Add("English", "en-US");
+            dic.Add("Русский", "ru-RU");
+            string selectedValue = (string)((ComboBoxItem)cbLocale.SelectedItem).Content;
+            SetLocale(dic[selectedValue]);
+        }
+
         private void cbBackgroundColor_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var dic = new Dictionary<String, SolidColorBrush>();
             dic.Add("White", new SolidColorBrush(Colors.White));
+            dic.Add("Белый", new SolidColorBrush(Colors.White));
             dic.Add("Green", new SolidColorBrush(Colors.Green));
+            dic.Add("Зелёный", new SolidColorBrush(Colors.Green));
             dic.Add("Yellow", new SolidColorBrush(Colors.Yellow));
+            dic.Add("Жёлтый", new SolidColorBrush(Colors.Yellow));
             dic.Add("Violet", new SolidColorBrush(Colors.Violet));
+            dic.Add("Фиолетовый", new SolidColorBrush(Colors.Violet));
             String selectedValue = (String)((ComboBoxItem)cbBackgroundColor.SelectedItem).Content;
             BackgroundColor = dic[selectedValue];
         }
