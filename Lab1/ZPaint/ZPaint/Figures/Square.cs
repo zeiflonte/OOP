@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,10 +12,12 @@ namespace ZPaint
     [Serializable]
     public class Square : Rectangle
     {
-        public Square(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factoryType, color, thickness, point1, point2)
+        public Square(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
         {
-            factoryType = typeof(FactoryRectangle);
         }
+
+        protected Square(SerializationInfo info, StreamingContext context) : base(info, context)
+        { }
 
         protected override void SetScales()
         {

@@ -9,11 +9,16 @@ using System.Windows.Media;
 
 namespace ZPaint
 {
-    [DataContract]
+    [KnownTypeAttribute(typeof(Rectangle))]
+    [Serializable]
     public class Rectangle : Shape
     {
-        public Rectangle(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factoryType, color, thickness, point1, point2)
+        public Rectangle(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
         { }
+
+        protected Rectangle(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
 
         public override System.Windows.Shapes.Shape DrawFigure()
         {

@@ -5,12 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ZPaint"
         mc:Ignorable="d"
-        Title="ZPaint" Height="707" Width="1050" ResizeMode="NoResize" KeyDown="Window_KeyDown">
+        Title="ZPaint" Height="707" Width="1050" ResizeMode="NoResize" KeyDown="Window_KeyDown" Closed="Window_Closed">
     <Grid x:Name="Grid">
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem x:Name="mitFile" Header="_File">
-                    <MenuItem x:Name="mitOpen" Header="_Open" Click="mitOpen_Click"/>
+                    <MenuItem x:Name="mitOpen" Header="Open" Click="mitOpen_Click"/>
                     <MenuItem x:Name="mitSave" Header="_Save" Click="mitSave_Click"/>
                 </MenuItem>
                 <MenuItem x:Name="mitPlugins" Header="_Plugins">
@@ -20,18 +20,18 @@
             </Menu>
             <StackPanel></StackPanel>
         </DockPanel>
-        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="608" VerticalAlignment="Top" Width="889" Background="Transparent" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp" MouseDown="listShapes_LostFocus" Margin="0,18,0,0"/>
+        <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="608" VerticalAlignment="Top" Width="889" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp" MouseDown="listShapes_LostFocus" Margin="0,18,0,0" Background="White"/>
 
         <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3"/>
-        <ComboBox x:Name="cbThickness" HorizontalAlignment="Left" Height="23" Margin="353,636,0,0" VerticalAlignment="Top" Width="111" SelectionChanged="cbThickness_SelectionChanged">
-            <ComboBoxItem Content="Thin" IsSelected="True"/>
-            <ComboBoxItem Content="Medium" FontWeight="Medium"/>
-            <ComboBoxItem Content="Thick" FontWeight="Bold"/>
+        <ComboBox x:Name="cbThickness" HorizontalAlignment="Left" Height="23" Margin="192,636,0,0" VerticalAlignment="Top" Width="111" SelectionChanged="cbThickness_SelectionChanged">
+            <ComboBoxItem x:Name="cbitThin" Content="Thin" IsSelected="True"/>
+            <ComboBoxItem x:Name="cbitMedium" Content="Medium" FontWeight="Medium"/>
+            <ComboBoxItem x:Name="cbitThick" Content="Thick" FontWeight="Bold"/>
         </ComboBox>
-        <ComboBox x:Name="cbColor" HorizontalAlignment="Left" Height="23" Margin="500,636,0,0" VerticalAlignment="Top" Width="111                   " SelectionChanged="comboBox_SelectionChanged">
-            <ComboBoxItem Content="Black" IsSelected="True"/>
-            <ComboBoxItem Content="Blue" Foreground="Blue"/>
-            <ComboBoxItem Content="Red" Foreground="Red"/>
+        <ComboBox x:Name="cbColor" HorizontalAlignment="Left" Height="23" Margin="308,636,0,0" VerticalAlignment="Top" Width="111                   " SelectionChanged="comboBox_SelectionChanged">
+            <ComboBoxItem x:Name="cbitBlack" Content="Black" IsSelected="True"/>
+            <ComboBoxItem x:Name="cbitBlue" Content="Blue" Foreground="Blue"/>
+            <ComboBoxItem x:Name="cbitRed" Content="Red" Foreground="Red"/>
         </ComboBox>
         <ListBox x:Name="listShapes" Margin="894,18,-2,57" SelectionChanged="listShapes_SelectionChanged" LostFocus="listShapes_LostFocus">
             <ListBox.BorderBrush>
@@ -50,6 +50,16 @@
             <ComboBoxItem x:Name="cbitCircle" Content="○ Circle" Selected="cbitCircle_Selected"/>
             <ComboBoxItem x:Name="cbitTriangle" Content="△ Triangle" Selected="cbitTriangle_Selected"/>
             <ComboBoxItem x:Name="cbitHexagon" Content="⑥ Hexagon" Selected="cbitHexagon_Selected"/>
+        </ComboBox>
+        <ComboBox x:Name="cbBackgroundColor" HorizontalAlignment="Left" Height="23" Margin="521,636,0,0" VerticalAlignment="Top" Width="111                   " SelectionChanged="cbBackgroundColor_SelectionChanged">
+            <ComboBoxItem x:Name="cbitBWhite" Content="White" IsSelected="True"/>
+            <ComboBoxItem x:Name="cbitBGreen" Content="Green" Foreground="#FF26AA26"/>
+            <ComboBoxItem x:Name="cbitBYellow" Content="Yellow" Foreground="#FFABB21D"/>
+            <ComboBoxItem x:Name="cbitBViolet" Content="Violet" Foreground="#FF7400FF"/>
+        </ComboBox>
+        <ComboBox x:Name="cbLocale" HorizontalAlignment="Left" Height="23" Margin="659,636,0,0" VerticalAlignment="Top" Width="111                   " SelectionChanged="cbLocale_SelectionChanged">
+            <ComboBoxItem Content="English" IsSelected="True"/>
+            <ComboBoxItem Content="Русский" Foreground="Black" Background="White"/>
         </ComboBox>
 
     </Grid>

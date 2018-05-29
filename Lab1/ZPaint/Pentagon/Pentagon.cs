@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,21 +16,25 @@ namespace Pentagon
     {
         public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
-            factoryType = typeof(FactoryPentagon);
-            return new Pentagon(factoryType, color, thickness, point1, point2);
+            return new Pentagon(color, thickness, point1, point2);
         }
 
-         public override string PluginName()
+         public override string PluginName(string _culture)
          {
-             return "⬠ Pentagon";
-         } 
+            CultureInfo culture = CultureInfo.CreateSpecificCulture(_culture);
+            ResourceManager rm = new ResourceManager("Pentagon.locale", typeof(FactoryPentagon).Assembly);
+            return rm.GetString("PluginName", culture);
+        } 
     }
 
+    [Serializable]
     public class Pentagon : Polygon, IPluginFigure
     {
-        public Pentagon(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factoryType, color, thickness, point1, point2)
-        {
-        }
+        public Pentagon(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        { }
+
+        protected Pentagon(SerializationInfo info, StreamingContext context) : base(info, context)
+        { }
 
         protected override void SetScales()
         {

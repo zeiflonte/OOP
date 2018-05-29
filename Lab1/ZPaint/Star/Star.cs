@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,20 +17,25 @@ namespace Star
         public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             factoryType = typeof(FactoryStar);
-            return new Star(factoryType, color, thickness, point1, point2);
+            return new Star(color, thickness, point1, point2);
         }
 
-        public override string PluginName()
+        public override string PluginName(string _culture)
         {
-            return "☆ Star";
+            CultureInfo culture = CultureInfo.CreateSpecificCulture(_culture);
+            ResourceManager rm = new ResourceManager("Star.locale", typeof(FactoryStar).Assembly);
+            return rm.GetString("PluginName", culture);
         } 
     }
 
+    [Serializable]
     public class Star : Polygon, IPluginFigure
     {
-        public Star (Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factoryType, color, thickness, point1, point2)
-        {
-        }
+        public Star (SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        { }
+
+        protected Star(SerializationInfo info, StreamingContext context) : base(info, context)
+        { }
 
         protected override void SetScales()
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,7 +12,10 @@ namespace ZPaint
     [Serializable]
     public class Ellipse : Shape
     {
-        public Ellipse(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factoryType, color, thickness, point1, point2)
+        public Ellipse(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        { }
+
+        protected Ellipse(SerializationInfo info, StreamingContext context) : base(info, context)
         { }
 
         public override System.Windows.Shapes.Shape DrawFigure()
