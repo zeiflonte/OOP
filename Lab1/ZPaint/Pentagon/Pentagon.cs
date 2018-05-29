@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,10 +19,12 @@ namespace Pentagon
             return new Pentagon(factoryType, color, thickness, point1, point2);
         }
 
-         public override string PluginName()
+         public override string PluginName(string _culture)
          {
-             return "⬠ Pentagon";
-         } 
+            CultureInfo culture = CultureInfo.CreateSpecificCulture(_culture);
+            ResourceManager rm = new ResourceManager("Pentagon.locale", typeof(FactoryPentagon).Assembly);
+            return rm.GetString("PluginName", culture);
+        } 
     }
 
     public class Pentagon : Polygon, IPluginFigure
