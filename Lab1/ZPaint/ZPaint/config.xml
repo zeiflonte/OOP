@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <body>
-  <locale>Русский</locale>
+  <locale>English</locale>
   <tools>
-    <thickness>Толстый</thickness>
-    <color>Синий</color>
+    <thickness>Thick</thickness>
+    <color>Red</color>
   </tools>
-  <background>Жёлтый</background>
+  <background>Yellow</background>
 </body>

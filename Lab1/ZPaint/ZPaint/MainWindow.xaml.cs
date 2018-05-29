@@ -16,7 +16,6 @@ using System.Windows.Shapes;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
 using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
@@ -47,6 +46,21 @@ namespace ZPaint
         private int thickness;
         private SolidColorBrush color;
 
+        List<Type> typeList = new List<Type>()
+        {
+            typeof(Rectangle),
+            typeof(Square),
+            typeof(Circle),
+            typeof(Ellipse),
+            typeof(Triangle),
+            typeof(Hexagon),
+            typeof(SolidColorBrush),
+            typeof(Shape),
+            typeof(Point),
+            typeof(MatrixTransform),
+            typeof(Line)
+        };
+
         SolidColorBrush BackgroundColor
         {
             get
@@ -69,6 +83,7 @@ namespace ZPaint
         {
             InitializeComponent();
             XMLLoad();
+            addPluginsFactories();
             addPlugins();
         }
 
@@ -280,7 +295,7 @@ namespace ZPaint
             amountOfPlugins = 0;
         } */
 
-        private void addPlugins()
+        private void addPluginsFactories()
         {
             // Create a plugin directory if it does not exist
 
@@ -358,6 +373,52 @@ namespace ZPaint
                 string errorMessage = sb.ToString();
                 MessageBox.Show(errorMessage);
             }
+        }
+
+        private void addPlugins()
+        {
+            // Create a plugin directory if it does not exist
+
+            DirectoryInfo pluginsDirectory = new DirectoryInfo(pluginsPath);
+            if (!pluginsDirectory.Exists)
+            {
+                pluginsDirectory.Create();
+                pluginsDirectory.Attributes = FileAttributes.Directory;
+            }
+
+            // Get names of .dll files in the plugin directory
+
+            string locale = GetLocale();
+
+            string[] pluginFiles = Directory.GetFiles(pluginsPath, "*.dll");
+
+            foreach (var pluginFile in pluginFiles)
+            {
+                try
+                {
+                    // Load assembly
+
+                    Assembly assembly = Assembly.LoadFrom(pluginFile);
+                    var _type = typeof(IPluginFigure);
+
+                    // Get all types that implement an interface
+
+                    var types = assembly.GetTypes()
+                        .Where(p => _type.IsAssignableFrom(p));
+
+                    foreach (var type in types)
+                    {
+                        // Add instances of received types implementing factories in the program
+
+                        typeList.Add(type);
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message);
+                    continue;
+                }
+            }            
         }
 
         private void cbFactory_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -520,17 +581,6 @@ namespace ZPaint
            // addPlugins();
         }
 
-        // Temporary structure aimed to hold data from .json file entries
-
-        struct ShapeImage
-        {
-            public Type FactoryType;
-            public Point point1;
-            public Point point2;
-            public int thickness;
-            public SolidColorBrush color;
-        }
-
         private void mitSave_Click(object sender, RoutedEventArgs e)
         {
             // Restore original color of an illuminated figure
@@ -551,17 +601,14 @@ namespace ZPaint
             if (fileSave.ShowDialog() == true)
             {
                 // Serialization of figures
-
-                JsonSerializer jsonSerializer = new JsonSerializer();
-
+                
                 string filename = fileSave.FileName;
 
-                using (StreamWriter stream = new StreamWriter(filename))
+                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(list.GetType(), typeList.ToArray());
+
+                using (FileStream stream = new FileStream(filename, FileMode.Create))
                 {
-                    using (JsonWriter writer = new JsonTextWriter(stream))
-                    {
-                        list.Serialize(jsonSerializer, stream, writer);
-                    }
+                    list.Serialize(jsonSerializer, stream);
                 }
             }
 
@@ -592,38 +639,29 @@ namespace ZPaint
             if (fileOpen.ShowDialog() == true)
             {
                 // Deserialization of figures
-
-                JsonSerializer jsonSerializer = new JsonSerializer();
+                
+                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(list.GetType(), typeList.ToArray());
 
                 string fileName = fileOpen.FileName;
 
-                using (StreamReader stream = new StreamReader(fileName))
+                using (FileStream stream = new FileStream(fileName, FileMode.Open))
                 {
-                    string data = stream.ReadToEnd();
+                    try
                     {
-                        string[] dataArray = data.Split('\n');
-                        foreach (string dataBlock in dataArray)
+                        list.Clear();
+                        list.Deserialize(jsonSerializer, stream);
+                            
+                        // Create figures
+
+                        foreach (var shape in list.list)
                         {
-                            try
-                            {
-                                ShapeImage image = JsonConvert.DeserializeObject<ShapeImage>(dataBlock, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Include });
-
-                                // Create a figure
-
-                                Factory factory = (Factory)Activator.CreateInstance(image.FactoryType);
-                                shape = factory.Create(image.color, image.thickness, image.point1, image.point2);
-                                list.Add(shape);
-                                listShapes.Items.Add(shape);
-                                shape.DrawInCanvas(point1, point2, canvas);
-                                shape = null;
-                            }
-                            catch (Exception ex)
-                            {
-                                MessageBox.Show(ex.Message);
-                                continue;
-                            }
+                            listShapes.Items.Add(shape);
+                            shape.DrawInCanvas(point1, point2, canvas);
                         }
+                        shape = null;
                     }
+                    catch (SerializationException)
+                    { }
                 }
 
                 fileOpen = null;

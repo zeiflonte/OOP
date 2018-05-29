@@ -23,7 +23,7 @@ namespace ZPaint
         public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             factoryType = typeof(FactoryLine);
-            return new Line(factoryType, color, thickness, point1, point2);
+            return new Line(color, thickness, point1, point2);
         }
     }
 
@@ -32,7 +32,7 @@ namespace ZPaint
         public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             factoryType = typeof(FactorySquare);
-            return new Square(factoryType, color, thickness, point1, point2);
+            return new Square(color, thickness, point1, point2);
         }
     }
 
@@ -41,7 +41,7 @@ namespace ZPaint
         public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             factoryType = typeof(FactoryRectangle);
-            return new Rectangle(factoryType, color, thickness, point1, point2); 
+            return new Rectangle(color, thickness, point1, point2); 
         }
     }
 
@@ -50,7 +50,7 @@ namespace ZPaint
         public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             factoryType = typeof(FactoryCircle);
-            return new Circle(factoryType, color, thickness, point1, point2);
+            return new Circle(color, thickness, point1, point2);
         }
     }
 
@@ -59,7 +59,7 @@ namespace ZPaint
         public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             factoryType = typeof(FactoryEllipse);
-            return new Ellipse(factoryType, color, thickness, point1, point2);
+            return new Ellipse(color, thickness, point1, point2);
         }
     }
 
@@ -68,7 +68,7 @@ namespace ZPaint
         public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             factoryType = typeof(FactoryTriangle);
-            return new Triangle(factoryType, color, thickness, point1, point2);
+            return new Triangle(color, thickness, point1, point2);
         }
     }
 
@@ -77,7 +77,7 @@ namespace ZPaint
         public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             factoryType = typeof(FactoryHexagon);
-            return new Hexagon(factoryType, color, thickness, point1, point2);
+            return new Hexagon(color, thickness, point1, point2);
         }
     }
 }

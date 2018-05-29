@@ -11,35 +11,20 @@ using System.Runtime.Serialization;
 
 namespace ZPaint
 {
-    [DataContract]
-    public abstract class Shape
+    [Serializable]
+    public abstract class Shape : ISerializable
     {
         public System.Windows.Shapes.Shape figure;
 
-        [DataMember]
-        private Type factoryType; 
-        [DataMember]
         public Point point1;
-        [DataMember]
-        public Point point2;
-        [DataMember]
-        public int thickness;
-        [DataMember]
-        public SolidColorBrush color;
-        
-        protected Point[] points;
 
-        public Type FactoryType
-        {
-            get
-            {
-                return factoryType;
-            }
-            set
-            {
-                factoryType = value;
-            }
-        }
+        public Point point2;
+
+        public int thickness;
+
+        public SolidColorBrush color;
+
+        protected Point[] points;
 
         public double Height
         {
@@ -65,13 +50,33 @@ namespace ZPaint
             }
         }
 
-        public Shape(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2)
+        public Shape(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             figure = DrawFigure();
 
-            SetFactoryType(factoryType);
-
             SetParameters(color, thickness, point1, point2); 
+        }
+
+        protected Shape(SerializationInfo info, StreamingContext context)
+        {
+            this.color = (SolidColorBrush)info.GetValue("color", typeof(SolidColorBrush));
+            this.thickness = (int)info.GetValue("thickness", typeof(int));
+            this.point1 = (Point)info.GetValue("point1", typeof(Point));
+            this.point2 = (Point)info.GetValue("point2", typeof(Point));
+
+            figure = DrawFigure();
+
+            SetScales();
+
+            SetPosition();
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("color", color);
+            info.AddValue("thickness", thickness);
+            info.AddValue("point1", point1);
+            info.AddValue("point2", point2);
         }
 
         public virtual void SetParameters(SolidColorBrush color, int thickness, Point point1, Point point2)
@@ -85,11 +90,6 @@ namespace ZPaint
             SetScales();
 
             SetPosition();
-        }
-
-        protected virtual void SetFactoryType(Type _factoryType)
-        {
-            factoryType = _factoryType;
         }
 
         public void SetColor(SolidColorBrush color)

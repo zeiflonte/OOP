@@ -9,13 +9,12 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Runtime.Serialization.Json;
 using System.IO;
-using Newtonsoft.Json;
 
 namespace ZPaint
 {
     class ListFigures
     {
-        private List<Shape> list;
+        public List<Shape> list;
 
         public ListFigures()
         {
@@ -42,21 +41,23 @@ namespace ZPaint
             return list.Count();
         }
 
-        public void Serialize(JsonSerializer jsonSerializer, StreamWriter stream, JsonWriter writer)
+        public new Type GetType()
         {
-            for (int i = 0; i < list.Count(); i++)
+            return list.GetType();
+        }
+
+        public void Serialize(DataContractJsonSerializer jsonSerializer, FileStream stream)
+        {
+            /*foreach (var shape in list)
             {
-                jsonSerializer.Serialize(writer, list[i]);
-                if (i != list.Count() - 1)
-                {
-                    stream.Write("\n");
-                }
-            }
+                jsonSerializer.WriteObject(stream, shape);
+            }*/
+            jsonSerializer.WriteObject(stream, list);
         }
 
         public void Deserialize(DataContractJsonSerializer jsonSerializer, FileStream stream)
         {
-            list.Add((Shape)jsonSerializer.ReadObject(stream));
+            list = jsonSerializer.ReadObject(stream) as List<Shape>;
         }
 
         public void Draw(Canvas canvas)

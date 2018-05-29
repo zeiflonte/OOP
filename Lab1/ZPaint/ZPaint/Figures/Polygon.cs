@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,7 +12,12 @@ namespace ZPaint
     [Serializable]
     public abstract class Polygon : Shape
     {
-        protected Polygon(Type factoryType, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factoryType, color, thickness, point1, point2)
+        protected Polygon(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        {
+            ((System.Windows.Shapes.Polygon)figure).Points = new PointCollection(DrawPolygon());
+        }
+
+        protected Polygon(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             ((System.Windows.Shapes.Polygon)figure).Points = new PointCollection(DrawPolygon());
         }
