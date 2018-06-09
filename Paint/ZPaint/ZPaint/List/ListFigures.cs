@@ -14,19 +14,19 @@ namespace ZPaint
 {
     class ListFigures
     {
-        public List<Shape> list;
+        public List<List<Shape>> list;
 
         public ListFigures()
         {
-            list = new List<Shape>();
+            list = new List<List<Shape>>();
         }
 
-        public void Add(Shape figure)
+        public void Add(List<Shape> figure)
         {
             list.Add(figure);
         }
 
-        public void Remove(Shape figure)
+        public void Remove(List<Shape> figure)
         {
             list.Remove(figure);
         }
@@ -41,6 +41,7 @@ namespace ZPaint
             return list.Count();
         }
 
+        // ???
         public new Type GetType()
         {
             return list.GetType();
@@ -57,22 +58,25 @@ namespace ZPaint
 
         public void Deserialize(DataContractJsonSerializer jsonSerializer, FileStream stream)
         {
-            list = jsonSerializer.ReadObject(stream) as List<Shape>;
+            list = jsonSerializer.ReadObject(stream) as List<List<Shape>>;
         }
 
         public void Draw(Canvas canvas)
         {
             canvas.Children.Clear();
-            foreach (Shape figure in list)
+            foreach (List<Shape> listFigure in list)
             {
-                // Settings for a canvas
+                foreach (Shape figure in listFigure)
+                {
+                    // Settings for a canvas
 
-                figure.figure.Stroke = figure.color;
-                figure.figure.StrokeThickness = figure.thickness;
+                    figure.figure.Stroke = figure.color;
+                    figure.figure.StrokeThickness = figure.thickness;
 
-                // Draw a figure on the canvas
+                    // Draw a figure on the canvas
 
-                canvas.Children.Add(figure.figure);
+                    canvas.Children.Add(figure.figure);
+                }
             }
         }
     }

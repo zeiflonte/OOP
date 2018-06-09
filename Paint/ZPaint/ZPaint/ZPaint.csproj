@@ -56,6 +56,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Creator.xaml.cs">
+      <DependentUpon>Creator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="locale.en-US.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -75,6 +78,10 @@
     <Compile Include="Figures\Rectangle.cs" />
     <Compile Include="Figures\Shape.cs" />
     <Compile Include="Figures\Triangle.cs" />
+    <Page Include="Creator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

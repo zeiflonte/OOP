@@ -65,13 +65,10 @@ namespace ZPaint
             this.point2 = (Point)info.GetValue("point2", typeof(Point));
 
             figure = DrawFigure();
-
-            SetScales();
-
-            SetPosition();
+            SetParameters(color, thickness, point1, point2);
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("color", color);
             info.AddValue("thickness", thickness);
@@ -144,6 +141,9 @@ namespace ZPaint
             Canvas.SetLeft(figure, point1.X);
             Canvas.SetTop(figure, point1.Y);
         }
+
+        protected virtual void SetXY(SerializationInfo info)
+        { }
 
         public void DrawInCanvas(Point point1, Point point2, Canvas canvas)
         {

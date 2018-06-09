@@ -33,11 +33,12 @@ namespace ZPaint
         private CultureInfo culture;
 
         private Shape shape;
-        private Shape exShape;
         private SolidColorBrush exColor;
 
         private Factory factory;
         private ListFigures list = new ListFigures();
+        List<Shape> listShape;
+        List<Shape> listExShape;
 
         // Initial figure properties
 
@@ -159,8 +160,10 @@ namespace ZPaint
                 // Create a new figure
 
                 shape = factory.Create(color, thickness, point1, point2);
-                list.Add(shape);
-                listShapes.Items.Add(shape);
+                List<Shape> listShape = new List<Shape>();
+                listShape.Add(shape);
+                list.Add(listShape);
+                listShapes.Items.Add(listShape);
                 shape.DrawInCanvas(point1, point2, canvas);
 
                 // Reset initial settings
@@ -196,9 +199,12 @@ namespace ZPaint
 
             // Change parameters of an already existing figure
 
-            if (shape != null)
+            if (listShape != null)
             {
-                shape.SetThickness(thickness);
+                foreach (var shape in listShape)
+                {
+                    shape.SetThickness(thickness);
+                }
                 list.Draw(canvas);
             }
         }
@@ -229,10 +235,13 @@ namespace ZPaint
 
             // Change parameters of an already existing figure
 
-            if (shape != null)
+            if (listShape != null)
             {
-                shape.SetColor(color);
-                exColor = shape.color;
+                foreach (var shape in listShape)
+                {
+                    shape.SetColor(color);
+                }
+                exColor = listShape.First().color;
                 list.Draw(canvas);
             }
         }
@@ -241,23 +250,29 @@ namespace ZPaint
         {
             // Restore a previous color
 
-            if (exShape != null)
+            if (listExShape != null)
             {
-                exShape.color = exColor;
+                foreach (var shape in listExShape)
+                {
+                    shape.color = exColor;
+                }
             }
 
-            shape = listShapes.SelectedItem as Shape;
+            listShape = listShapes.SelectedItem as List<Shape>;
 
             // Save the previous color
 
-            if (shape != null)
+            if (listShape != null)
             {
-                exShape = shape;
-                exColor = shape.color;
+                listExShape = listShape;
+                exColor = listShape.First().color;
 
                 // Illuminate a selected figure
 
-                shape.color = Brushes.Pink;
+                foreach (var shape in listShape)
+                {
+                    shape.color = Brushes.Pink;
+                }
             }
 
             list.Draw(canvas);
@@ -265,9 +280,12 @@ namespace ZPaint
 
         private void listShapes_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (exShape != null)
+            if (listExShape != null)
             {
-                exShape.color = exColor;
+                foreach (var shape in listExShape)
+                {
+                    shape.color = exColor;
+                }
                 list.Draw(canvas);
             }
         }
@@ -278,7 +296,7 @@ namespace ZPaint
             {
                 // Delete a selected figure
 
-                list.Remove(shape);
+                list.Remove(listShape);
                 listShapes.Items.Remove(listShapes.SelectedItem);
             }
         }
@@ -585,9 +603,12 @@ namespace ZPaint
         {
             // Restore original color of an illuminated figure
 
-            if (exShape != null)
+            if (listExShape != null)
             {
-                exShape.color = exColor;
+                foreach (Shape shape in listExShape)
+                {
+                    shape.color = exColor;
+                }
                 list.Draw(canvas);
             }
 
@@ -653,10 +674,13 @@ namespace ZPaint
                             
                         // Create figures
 
-                        foreach (var shape in list.list)
+                        foreach (var listShape in list.list)
                         {
-                            listShapes.Items.Add(shape);
-                            shape.DrawInCanvas(point1, point2, canvas);
+                            listShapes.Items.Add(listShape);
+                            foreach (Shape shape in listShape)
+                            {
+                                shape.DrawInCanvas(point1, point2, canvas);
+                            }
                         }
                         shape = null;
                     }

@@ -67,6 +67,14 @@ namespace ZPaint
         protected Line(SerializationInfo info, StreamingContext context) : base(info, context)
         { }
 
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("color", color);
+            info.AddValue("thickness", thickness);
+            info.AddValue("point1", point1);
+            info.AddValue("point2", point2);
+        }
+
         public override void SetParameters(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             this.point1 = point1;
