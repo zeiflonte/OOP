@@ -14,9 +14,9 @@ namespace Pentagon
 {
     public class FactoryPentagon : Factory, IPluginFactory
     {
-        public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
+        public override Shape Create(Factory factory, SolidColorBrush color, int thickness, Point point1, Point point2)
         {
-            return new Pentagon(color, thickness, point1, point2);
+            return new Pentagon(factory, color, thickness, point1, point2);
         }
 
          public override string PluginName(string _culture)
@@ -30,7 +30,7 @@ namespace Pentagon
     [Serializable]
     public class Pentagon : Polygon, IPluginFigure
     {
-        public Pentagon(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        public Pentagon(Factory factory, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factory, color, thickness, point1, point2)
         { }
 
         protected Pentagon(SerializationInfo info, StreamingContext context) : base(info, context)

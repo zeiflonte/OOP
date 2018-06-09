@@ -14,10 +14,9 @@ namespace Star
 {
     public class FactoryStar : Factory, IPluginFactory
     {
-        public override Shape Create(SolidColorBrush color, int thickness, Point point1, Point point2)
+        public override Shape Create(Factory factory, SolidColorBrush color, int thickness, Point point1, Point point2)
         {
-            factoryType = typeof(FactoryStar);
-            return new Star(color, thickness, point1, point2);
+            return new Star(factory, color, thickness, point1, point2);
         }
 
         public override string PluginName(string _culture)
@@ -31,7 +30,7 @@ namespace Star
     [Serializable]
     public class Star : Polygon, IPluginFigure
     {
-        public Star (SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        public Star (Factory factory, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factory, color, thickness, point1, point2)
         { }
 
         protected Star(SerializationInfo info, StreamingContext context) : base(info, context)

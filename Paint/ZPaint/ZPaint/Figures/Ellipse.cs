@@ -12,7 +12,7 @@ namespace ZPaint
     [Serializable]
     public class Ellipse : Shape
     {
-        public Ellipse(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        public Ellipse(Factory factory, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factory, color, thickness, point1, point2)
         { }
 
         protected Ellipse(SerializationInfo info, StreamingContext context) : base(info, context)

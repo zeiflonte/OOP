@@ -12,7 +12,7 @@ namespace ZPaint
     [Serializable]
     public class Triangle : Polygon
     {
-        public Triangle(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        public Triangle(Factory factory, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factory, color, thickness, point1, point2)
         { }
 
         protected Triangle(SerializationInfo info, StreamingContext context) : base(info, context)

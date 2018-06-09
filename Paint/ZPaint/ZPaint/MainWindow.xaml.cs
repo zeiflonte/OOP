@@ -59,7 +59,15 @@ namespace ZPaint
             typeof(Shape),
             typeof(Point),
             typeof(MatrixTransform),
-            typeof(Line)
+            typeof(Line),
+            typeof(Factory),
+            typeof(FactoryCircle),
+            typeof(FactoryEllipse),
+            typeof(FactoryHexagon),
+            typeof(FactoryLine),
+            typeof(FactoryRectangle),
+            typeof(FactorySquare),
+            typeof(FactoryTriangle),
         };
 
         SolidColorBrush BackgroundColor
@@ -75,6 +83,7 @@ namespace ZPaint
         }
 
         Dictionary<string, Factory> Plugins = new Dictionary<String, Factory>();
+        Dictionary<string, List<Shape>> UserShapes = new Dictionary<String, List<Shape>>();
         private int amountOfPlugins = 0;
 
         public static string pluginsPath = "../../../Plugins";
@@ -138,7 +147,7 @@ namespace ZPaint
 
             // Set a cursor type
 
-            if (factory != null)
+            if (factory != null || listShape != null)
             {
                 Cursor = Cursors.Pen;
             }
@@ -152,24 +161,76 @@ namespace ZPaint
         {
             if (factory != null)
             {
-
                 // Save the second position
 
                 point2 = e.GetPosition(canvas);
         
                 // Create a new figure
 
-                shape = factory.Create(color, thickness, point1, point2);
+                shape = factory.Create(factory, color, thickness, point1, point2);
                 List<Shape> listShape = new List<Shape>();
                 listShape.Add(shape);
                 list.Add(listShape);
                 listShapes.Items.Add(listShape);
-                shape.DrawInCanvas(point1, point2, canvas);
+                shape.DrawInCanvas(canvas);
 
                 // Reset initial settings
 
                 shape = null;
                 Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                if (listShape != null)
+                {
+                    // Save the second position
+
+                    point2 = e.GetPosition(canvas);
+
+                    // Create a new figure
+
+                    List<Shape> tempList = new List<Shape>(); 
+
+                    foreach (Shape tmp in listShape)
+                    {
+                        Point actualPoint1 = new Point();
+                        Point actualPoint2 = new Point();
+                        actualPoint1.X =  point1.X;
+                        actualPoint1.Y =  point1.Y;
+                        actualPoint2.X =  point2.X;
+                        actualPoint2.Y =  point2.Y;
+
+                        shape = tmp.factory.Create(tmp.factory, tmp.color, tmp.thickness, actualPoint1, actualPoint2);
+                        // sh = shape;
+                        /* shape.point1.X += point1.X;
+                         shape.point1.Y += point1.Y;
+                         shape.point2.X += point2.X;
+                         shape.point2.Y += point2.Y;*/
+
+                        tempList.Add(shape);
+                        shape.DrawInCanvas(canvas);
+                    }
+                    list.Add(tempList);
+                    listShapes.Items.Add(tempList);
+
+                    /* foreach (Shape figure in listShape)
+                     {
+                         factory = new FactoryEllipse();
+                         shape = factory.Create(figure.color, figure.thickness, figure.point1, figure.point2);
+                         List<Shape> tempList = new List<Shape>();
+                         tempList.Add(shape);
+                         list.Add(tempList);
+                         listShapes.Items.Add(tempList);
+                         shape.DrawInCanvas(point1, point2, canvas);
+                     }*/
+
+                    // Reset initial settings
+
+                    shape = null;
+                    Cursor = Cursors.Arrow;
+
+                    //!!! listShape = null;
+                }
             }
         }
 
@@ -350,6 +411,8 @@ namespace ZPaint
                         {
                             // Add instances of received types implementing factories in the program
 
+                            typeList.Add(type);
+
                             plugin = (Factory)Activator.CreateInstance(type);
 
                             ComboBoxItem item = new ComboBoxItem();
@@ -447,9 +510,19 @@ namespace ZPaint
                 if (plugin.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
                 {
                     factory = plugin.Value;
-                    break;
+                    return;
                 }
             }
+            foreach (var shape in UserShapes)
+            {
+                // Set selected custom shape
+                if (shape.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
+                {
+                    listShape = shape.Value;
+                    return;
+                }
+            }
+            listShape = null;
         }
 
         void XMLLoad()
@@ -679,7 +752,7 @@ namespace ZPaint
                             listShapes.Items.Add(listShape);
                             foreach (Shape shape in listShape)
                             {
-                                shape.DrawInCanvas(point1, point2, canvas);
+                                shape.DrawInCanvas(canvas);
                             }
                         }
                         shape = null;
@@ -689,6 +762,30 @@ namespace ZPaint
                 }
 
                 fileOpen = null;
+            }
+        }
+
+        private void window_SubmitClicked(object sender, EventArgs e)
+        {
+            listShape = Creator.listShape;
+        }
+
+        private void butCreator_Click(object sender, RoutedEventArgs e)
+        {
+            Creator window = new Creator();
+            window.SubmitClicked += new EventHandler(window_SubmitClicked);
+            if (window.ShowDialog() == true)
+            {
+                //MessageBox.Show(listShape.ToString());
+
+                // plugin = (Factory)Activator.CreateInstance(type);
+                //listShape = Creator.listShape;
+
+                ComboBoxItem item = new ComboBoxItem();
+                item.Content = "New figure";
+                UserShapes.Add("New figure", listShape);
+                cbFactory.Items.Add(item);
+                listShape = null;
             }
         }
     }

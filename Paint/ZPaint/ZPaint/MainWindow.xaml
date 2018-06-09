@@ -23,7 +23,7 @@
         <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="608" VerticalAlignment="Top" Width="889" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseLeftButtonUp="canvas_MouseLeftButtonUp" MouseDown="listShapes_LostFocus" Margin="0,18,0,0" Background="White"/>
 
         <Border BorderThickness="1" HorizontalAlignment="Left" Height="43" Margin="0,626,0,0" VerticalAlignment="Top" Width="1042" Background="#FFEEE3E3">
-            <Button x:Name="button" Content="彡" HorizontalAlignment="Left" Height="23" Margin="125,9,0,0" VerticalAlignment="Top" Width="23"/>
+            <Button x:Name="butCreator" Content="彡" HorizontalAlignment="Left" Height="23" Margin="125,9,0,0" VerticalAlignment="Top" Width="23" Click="butCreator_Click"/>
         </Border>
         <ComboBox x:Name="cbThickness" HorizontalAlignment="Left" Height="23" Margin="192,636,0,0" VerticalAlignment="Top" Width="111" SelectionChanged="cbThickness_SelectionChanged">
             <ComboBoxItem x:Name="cbitThin" Content="Thin" IsSelected="True"/>

@@ -12,7 +12,7 @@ namespace ZPaint
     [Serializable]
     public abstract class Polygon : Shape
     {
-        protected Polygon(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        protected Polygon(Factory factory, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factory, color, thickness, point1, point2)
         {
             ((System.Windows.Shapes.Polygon)figure).Points = new PointCollection(DrawPolygon());
         }

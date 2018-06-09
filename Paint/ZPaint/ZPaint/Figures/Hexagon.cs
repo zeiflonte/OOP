@@ -12,7 +12,7 @@ namespace ZPaint
     [Serializable]
     public class Hexagon : Polygon
     {
-        public Hexagon(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        public Hexagon(Factory factory, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factory, color, thickness, point1, point2)
         {
         }
 

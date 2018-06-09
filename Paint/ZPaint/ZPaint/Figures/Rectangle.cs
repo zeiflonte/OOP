@@ -13,7 +13,7 @@ namespace ZPaint
     [Serializable]
     public class Rectangle : Shape
     {
-        public Rectangle(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        public Rectangle(Factory factory, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factory, color, thickness, point1, point2)
         { }
 
         protected Rectangle(SerializationInfo info, StreamingContext context) : base(info, context)

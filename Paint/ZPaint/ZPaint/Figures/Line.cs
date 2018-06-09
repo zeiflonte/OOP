@@ -61,7 +61,7 @@ namespace ZPaint
             }
         }
 
-        public Line(SolidColorBrush color, int thickness, Point point1, Point point2) : base(color, thickness, point1, point2)
+        public Line(Factory factory, SolidColorBrush color, int thickness, Point point1, Point point2) : base(factory, color, thickness, point1, point2)
         { }
 
         protected Line(SerializationInfo info, StreamingContext context) : base(info, context)

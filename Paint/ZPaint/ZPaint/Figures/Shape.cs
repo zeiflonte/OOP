@@ -16,6 +16,8 @@ namespace ZPaint
     {
         public System.Windows.Shapes.Shape figure;
 
+        public Factory factory;
+
         public Point point1;
 
         public Point point2;
@@ -50,8 +52,10 @@ namespace ZPaint
             }
         }
 
-        public Shape(SolidColorBrush color, int thickness, Point point1, Point point2)
+        public Shape(Factory factory, SolidColorBrush color, int thickness, Point point1, Point point2)
         {
+            this.factory = factory;
+
             figure = DrawFigure();
 
             SetParameters(color, thickness, point1, point2); 
@@ -63,6 +67,7 @@ namespace ZPaint
             this.thickness = (int)info.GetValue("thickness", typeof(int));
             this.point1 = (Point)info.GetValue("point1", typeof(Point));
             this.point2 = (Point)info.GetValue("point2", typeof(Point));
+            this.factory = (Factory)info.GetValue("factory", typeof(Factory));
 
             figure = DrawFigure();
             SetParameters(color, thickness, point1, point2);
@@ -74,6 +79,7 @@ namespace ZPaint
             info.AddValue("thickness", thickness);
             info.AddValue("point1", point1);
             info.AddValue("point2", point2);
+            info.AddValue("factory", factory);
         }
 
         public virtual void SetParameters(SolidColorBrush color, int thickness, Point point1, Point point2)
@@ -145,7 +151,7 @@ namespace ZPaint
         protected virtual void SetXY(SerializationInfo info)
         { }
 
-        public void DrawInCanvas(Point point1, Point point2, Canvas canvas)
+        public void DrawInCanvas(Canvas canvas)
         {
             figure.Stroke = color;
             figure.StrokeThickness = this.thickness;
