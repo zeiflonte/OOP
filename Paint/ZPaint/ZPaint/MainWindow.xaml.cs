@@ -21,12 +21,23 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Resources;
 using System.Globalization;
+using ZPaint.List;
 
 namespace ZPaint
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+
+    [DataContract]
+    public class UserData
+    {
+        [DataMember]
+        public List<List<Shape>> list;
+
+        [DataMember]
+        public Dictionary<string, List<Shape>> UserShapes = new Dictionary<String, List<Shape>>();
+    }
 
     public partial class MainWindow : Window
     {
@@ -82,7 +93,7 @@ namespace ZPaint
             }
         }
 
-        Dictionary<string, Factory> Plugins = new Dictionary<String, Factory>();
+        Dictionary<string, Factory> Plugins = new Dictionary<string, Factory>();
         Dictionary<string, List<Shape>> UserShapes = new Dictionary<String, List<Shape>>();
         private int amountOfPlugins = 0;
 
@@ -95,50 +106,18 @@ namespace ZPaint
             XMLLoad();
             addPluginsFactories();
             addPlugins();
+
+            string locale = GetLocale();
+            Tools tools = new Tools(Plugins, UserShapes, locale);
+            tools.FactorySelected += new EventHandler(tools_FactorySelected);
+            tools.DrawingToolsLoad(ref cbFactory);
         }
 
-        // Choose a type of a figure
-
-        private void cbitCursor_Selected(object sender, RoutedEventArgs e)
+        private void tools_FactorySelected(object sender, EventArgs e)
         {
-            factory = null;
+            factory = Tools.factory;
         }
 
-        private void cbitLine_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactoryLine();
-        }
-
-        private void cbitRectangle_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactoryRectangle();
-        }
-
-        private void cbitSquare_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactorySquare();
-        }
-
-        private void cbitOval_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactoryEllipse();
-        }
-
-        private void cbitCircle_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactoryCircle();
-        }
-
-        private void cbitTriangle_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactoryTriangle();
-        }
-
-        private void cbitHexagon_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactoryHexagon();
-        }
- 
         private void canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             // Save the first position
@@ -195,10 +174,10 @@ namespace ZPaint
                     {
                         Point actualPoint1 = new Point();
                         Point actualPoint2 = new Point();
-                        actualPoint1.X = tmp.point1.X + point1.X;
-                        actualPoint1.Y = tmp.point1.Y + point1.Y;
-                        actualPoint2.X = tmp.point2.X + point2.X + (point2.X - point1.X);
-                        actualPoint2.Y = tmp.point2.Y + point2.Y + (point2.Y - point1.Y);
+                        actualPoint1.X = point1.X + tmp.point1.X;
+                        actualPoint1.Y = point1.Y + tmp.point1.Y;
+                        actualPoint2.X = point1.X + tmp.point2.X;
+                        actualPoint2.Y = point1.Y + tmp.point2.Y;
 
                         shape = tmp.factory.Create(tmp.factory, tmp.color, tmp.thickness, actualPoint1, actualPoint2);
 
@@ -207,6 +186,7 @@ namespace ZPaint
                     }
                     list.Add(tempList);
                     listShapes.Items.Add(tempList);
+                    
 
                     // Reset initial settings
 
@@ -399,15 +379,15 @@ namespace ZPaint
 
                             plugin = (Factory)Activator.CreateInstance(type);
 
-                            ComboBoxItem item = new ComboBoxItem();
+                            //ComboBoxItem item = new ComboBoxItem();
 
-                            item.Content = plugin.PluginName(locale);
+                            //item.Content = plugin.PluginName(locale);
 
                             Plugins.Add(plugin.PluginName(locale), plugin);
 
-                            cbFactory.Items.Add(item);
+                           // Tools.PluginTools.Add(item);
 
-                            amountOfPlugins++;
+                            //amountOfPlugins++;
                         }
                     }
                     catch (Exception e)
@@ -488,24 +468,27 @@ namespace ZPaint
 
         private void cbFactory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (var plugin in Plugins)
+            if (cbFactory.Items.Count != 0)
             {
-                // Set selected custom factory
-                if (plugin.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
+                foreach (var plugin in Plugins)
                 {
-                    factory = plugin.Value;
-                    listShape = null;
-                    return;
+                    // Set selected custom factory
+                    if (plugin.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
+                    {
+                        factory = plugin.Value;
+                        listShape = null;
+                        return;
+                    }
                 }
-            }
-            foreach (var shape in UserShapes)
-            {
-                // Set selected custom shape
-                if (shape.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
+                foreach (var shape in UserShapes)
                 {
-                    listShape = shape.Value;
-                    factory = null;
-                    return;
+                    // Set selected custom shape
+                    if (shape.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
+                    {
+                        listShape = shape.Value;
+                        factory = null;
+                        return;
+                    }
                 }
             }
             listShape = null;
@@ -585,14 +568,6 @@ namespace ZPaint
             mitPlugins.Header = rm.GetString("mitPlugins", culture);
             mitSetFolder.Header = rm.GetString("mitSetFolder", culture);
             mitReload.Header = rm.GetString("mitReload", culture);
-            cbitCursor.Content = rm.GetString("cbitCursor", culture);
-            cbitLine.Content = rm.GetString("cbitLine", culture);
-            cbitRectangle.Content = rm.GetString("cbitRectangle", culture);
-            cbitSquare.Content = rm.GetString("cbitSquare", culture);
-            cbitOval.Content = rm.GetString("cbitOval", culture);
-            cbitCircle.Content = rm.GetString("cbitCircle", culture);
-            cbitTriangle.Content = rm.GetString("cbitTriangle", culture);
-            cbitHexagon.Content = rm.GetString("cbitHexagon", culture);
             cbitThin.Content = rm.GetString("cbitThin", culture);
             cbitMedium.Content = rm.GetString("cbitMedium", culture);
             cbitThick.Content = rm.GetString("cbitThick", culture);
@@ -684,11 +659,19 @@ namespace ZPaint
                 
                 string filename = fileSave.FileName;
 
-                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(list.GetType(), typeList.ToArray());
+                //DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(list.GetType(), typeList.ToArray());
+                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(UserData), typeList.ToArray());
 
                 using (FileStream stream = new FileStream(filename, FileMode.Create))
                 {
-                    list.Serialize(jsonSerializer, stream);
+                    UserData dataToSave = new UserData()
+                    {
+                        list = list.list,
+                        UserShapes = UserShapes
+                    };
+
+                    jsonSerializer.WriteObject(stream, dataToSave);
+                    //list.Serialize(jsonSerializer, stream);
                 }
             }
 
@@ -697,10 +680,16 @@ namespace ZPaint
 
         private void DeleteFigures()
         {
+            // Clear canvas
             list.Clear();
             listShapes.Items.Clear();
             canvas.Children.Clear();
 
+            // Delete user figures
+            UserShapes.Clear();
+            cbFactory.Items.Clear();
+
+            // Set default values
             factory = null;
             cbFactory.SelectedIndex = 0;
         }
@@ -720,7 +709,7 @@ namespace ZPaint
             {
                 // Deserialization of figures
                 
-                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(list.GetType(), typeList.ToArray());
+                DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(UserData), typeList.ToArray());
 
                 string fileName = fileOpen.FileName;
 
@@ -729,8 +718,14 @@ namespace ZPaint
                     try
                     {
                         list.Clear();
-                        list.Deserialize(jsonSerializer, stream);
-                            
+                        //list.Deserialize(jsonSerializer, stream)
+                        
+                        // Deserialization from JSON  
+                        UserData dataToLoad = (UserData)jsonSerializer.ReadObject(stream);
+                        list.list = dataToLoad.list;
+                        UserShapes = dataToLoad.UserShapes; 
+
+
                         // Create figures
 
                         foreach (var listShape in list.list)
@@ -743,11 +738,26 @@ namespace ZPaint
                         }
                         shape = null;
                     }
-                    catch (SerializationException)
-                    { }
+                    catch (SerializationException ex)
+                    { MessageBox.Show(ex.Message); }
                 }
 
                 fileOpen = null;
+
+                // Add custom figures in list
+
+                /* foreach (var shape in UserShapes)
+                 {
+                     ComboBoxItem item = new ComboBoxItem();
+                     item.Content = shape.Key;
+                     cbFactory.Items.Add(item);
+                 }
+                 listShape = null;*/
+
+                string locale = GetLocale();
+                Tools tools = new Tools(Plugins, UserShapes, locale);
+                tools.FactorySelected += new EventHandler(tools_FactorySelected);
+                tools.DrawingToolsLoad(ref cbFactory);
             }
         }
 
@@ -761,7 +771,8 @@ namespace ZPaint
 
         private void butCreator_Click(object sender, RoutedEventArgs e)
         {
-            Creator window = new Creator(Plugins, UserShapes);
+            string locale = GetLocale();
+            Creator window = new Creator(Plugins, UserShapes, locale);
             window.SubmitClicked += new EventHandler(window_SubmitClicked);
             if (window.ShowDialog() == true)
             {

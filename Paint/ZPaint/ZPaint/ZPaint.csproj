@@ -59,6 +59,7 @@
     <Compile Include="Creator.xaml.cs">
       <DependentUpon>Creator.xaml</DependentUpon>
     </Compile>
+    <Compile Include="List\Tools.cs" />
     <Compile Include="locale.en-US.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

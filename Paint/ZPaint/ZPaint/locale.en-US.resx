@@ -189,4 +189,10 @@
   <data name="mitSetFolder" xml:space="preserve">
     <value>Set folder</value>
   </data>
+  <data name="butApply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="butSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
 </root>

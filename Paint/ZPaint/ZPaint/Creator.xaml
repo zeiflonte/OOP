@@ -9,16 +9,7 @@
     <Grid>
         <Canvas x:Name="canvas" Height="224" VerticalAlignment="Top" MouseLeftButtonUp="canvas_MouseLeftButtonUp" Background="White" MouseLeftButtonDown="canvas_MouseLeftButtonDown"/>
         <Grid HorizontalAlignment="Left" Height="79" VerticalAlignment="Top" Width="392" Margin="0,224,0,0" Background="#FFDBF9B6">
-            <ComboBox x:Name="cbFactory" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="110" SelectionChanged="cbFactory_SelectionChanged" Margin="10,7,0,0">
-                <ComboBoxItem x:Name="cbitCursor" Content="➤ Cursor" IsSelected="True" Selected="cbitCursor_Selected"/>
-                <ComboBoxItem x:Name="cbitLine" Content="— Line" Selected="cbitLine_Selected"/>
-                <ComboBoxItem x:Name="cbitRectangle" Content="▭ Rectangle" Selected="cbitRectangle_Selected"/>
-                <ComboBoxItem x:Name="cbitSquare" Content="▢ Square" Selected="cbitSquare_Selected"/>
-                <ComboBoxItem x:Name="cbitOval" Content="⬭ Oval" Selected="cbitOval_Selected"/>
-                <ComboBoxItem x:Name="cbitCircle" Content="○ Circle" Selected="cbitCircle_Selected"/>
-                <ComboBoxItem x:Name="cbitTriangle" Content="△ Triangle" Selected="cbitTriangle_Selected"/>
-                <ComboBoxItem x:Name="cbitHexagon" Content="⑥ Hexagon" Selected="cbitHexagon_Selected"/>
-            </ComboBox>
+            <ComboBox x:Name="cbFactory" HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="110" SelectionChanged="cbFactory_SelectionChanged" Margin="10,7,0,0"/>
             <ComboBox x:Name="cbThickness" HorizontalAlignment="Left" Height="23" Margin="135,7,0,0" VerticalAlignment="Top" Width="60" SelectionChanged="cbThickness_SelectionChanged">
                 <ComboBoxItem x:Name="cbitThin" Content="Thin" IsSelected="True"/>
                 <ComboBoxItem x:Name="cbitMedium" Content="Medium" FontWeight="Medium"/>

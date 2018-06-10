@@ -43,16 +43,7 @@
                 </LinearGradientBrush>
             </ListBox.BorderBrush>
         </ListBox>
-        <ComboBox x:Name="cbFactory" HorizontalAlignment="Left" Height="23" Margin="10,636,0,0" VerticalAlignment="Top" Width="111" SelectionChanged="cbFactory_SelectionChanged">
-            <ComboBoxItem x:Name="cbitCursor" Content="➤ Cursor" IsSelected="True" Selected="cbitCursor_Selected"/>
-            <ComboBoxItem x:Name="cbitLine" Content="— Line" Selected="cbitLine_Selected"/>
-            <ComboBoxItem x:Name="cbitRectangle" Content="▭ Rectangle" Selected="cbitRectangle_Selected"/>
-            <ComboBoxItem x:Name="cbitSquare" Content="▢ Square" Selected="cbitSquare_Selected"/>
-            <ComboBoxItem x:Name="cbitOval" Content="⬭ Oval" Selected="cbitOval_Selected"/>
-            <ComboBoxItem x:Name="cbitCircle" Content="○ Circle" Selected="cbitCircle_Selected"/>
-            <ComboBoxItem x:Name="cbitTriangle" Content="△ Triangle" Selected="cbitTriangle_Selected"/>
-            <ComboBoxItem x:Name="cbitHexagon" Content="⑥ Hexagon" Selected="cbitHexagon_Selected"/>
-        </ComboBox>
+        <ComboBox x:Name="cbFactory" HorizontalAlignment="Left" Height="23" Margin="10,636,0,0" VerticalAlignment="Top" Width="111" SelectionChanged="cbFactory_SelectionChanged"/>
         <ComboBox x:Name="cbBackgroundColor" HorizontalAlignment="Left" Height="23" Margin="521,636,0,0" VerticalAlignment="Top" Width="111                   " SelectionChanged="cbBackgroundColor_SelectionChanged">
             <ComboBoxItem x:Name="cbitBWhite" Content="White" IsSelected="True"/>
             <ComboBoxItem x:Name="cbitBGreen" Content="Green" Foreground="#FF26AA26"/>

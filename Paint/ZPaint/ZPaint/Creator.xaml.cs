@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ZPaint.List;
 
 namespace ZPaint
 {
@@ -20,6 +23,7 @@ namespace ZPaint
     public partial class Creator : Window
     {
         public static List<Shape> listShape { get; set; }
+        List<Shape> userShape;
 
         public static string shapeName { get; set; }
 
@@ -41,55 +45,39 @@ namespace ZPaint
 
         public event EventHandler SubmitClicked;
 
-        private void cbitCursor_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = null;
-        }
-
-        private void cbitLine_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactoryLine();
-        }
-
-        private void cbitRectangle_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactoryRectangle();
-        }
-
-        private void cbitSquare_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactorySquare();
-        }
-
-        private void cbitOval_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactoryEllipse();
-        }
-
-        private void cbitCircle_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactoryCircle();
-        }
-
-        private void cbitTriangle_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactoryTriangle();
-        }
-
-        private void cbitHexagon_Selected(object sender, RoutedEventArgs e)
-        {
-            factory = new FactoryHexagon();
-        }
-
-        public Creator(Dictionary<string, Factory> Plugins, Dictionary<string, List<Shape>> UserShapes)
+        public Creator(Dictionary<string, Factory> Plugins, Dictionary<string, List<Shape>> UserShapes, string locale)
         {
             this.Plugins = Plugins;
             this.UserShapes = UserShapes;
 
             InitializeComponent();
             this.Height = 299;
+            SetLocale(locale);
+
+            Tools tools = new Tools(Plugins, UserShapes, locale);
+            tools.FactorySelected += new EventHandler(tools_FactorySelected);
+            tools.DrawingToolsLoad(ref cbFactory);
 
             listShape = new List<Shape>();
+        }
+
+        private void SetLocale(string _culture)
+        {
+            CultureInfo culture = CultureInfo.CreateSpecificCulture(_culture);
+            ResourceManager rm = new ResourceManager("ZPaint.locale", typeof(MainWindow).Assembly);
+            cbitThin.Content = rm.GetString("cbitThin", culture);
+            cbitMedium.Content = rm.GetString("cbitMedium", culture);
+            cbitThick.Content = rm.GetString("cbitThick", culture);
+            cbitBlack.Content = rm.GetString("cbitBlack", culture);
+            cbitBlue.Content = rm.GetString("cbitBlue", culture);
+            cbitRed.Content = rm.GetString("cbitRed", culture);
+            butSave.Content = rm.GetString("butSave", culture);
+            butApply.Content = rm.GetString("butApply", culture);
+        }
+
+        private void tools_FactorySelected(object sender, EventArgs e)
+        {
+            factory = Tools.factory;
         }
 
         private void cbThickness_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -197,19 +185,130 @@ namespace ZPaint
                 shape = null;
                 Cursor = Cursors.Arrow;
             }
+            else
+            {
+                if (userShape != null)
+                {
+                    // Save the second position
+
+                    point2 = e.GetPosition(canvas);
+
+                    // Create a new figure
+
+                    foreach (Shape tmp in userShape)
+                    {
+                        Point actualPoint1 = new Point();
+                        Point actualPoint2 = new Point();
+                        actualPoint1.X = point1.X + tmp.point1.X;
+                        actualPoint1.Y = point1.Y + tmp.point1.Y;
+                        actualPoint2.X = point1.X + tmp.point2.X;
+                        actualPoint2.Y = point1.Y + tmp.point2.Y;
+
+                        shape = tmp.factory.Create(tmp.factory, tmp.color, tmp.thickness, actualPoint1, actualPoint2);
+
+                        listShape.Add(shape);
+                        shape.DrawInCanvas(canvas);
+                    }
+                    // list.Add(tempList);
+                    //  listShapes.Items.Add(tempList);
+
+
+                    // Reset initial settings
+
+                    shape = null;
+                    Cursor = Cursors.Arrow;
+
+                    //!!! listShape = null;
+                }
+            }
         }
+
+        /*private void canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (factory != null)
+            {
+                // Save the second position
+
+                point2 = e.GetPosition(canvas);
+
+                // Create a new figure
+
+                shape = factory.Create(factory, color, thickness, point1, point2);
+                List<Shape> listShape = new List<Shape>();
+                listShape.Add(shape);
+                shape.DrawInCanvas(canvas);
+
+                // Reset initial settings
+
+                shape = null;
+                Cursor = Cursors.Arrow;
+            }
+            else
+            {
+                if (listShape != null)
+                {
+                    // Save the second position
+
+                    point2 = e.GetPosition(canvas);
+
+                    // Create a new figure
+
+                    List<Shape> tempList = new List<Shape>();
+
+                    foreach (Shape tmp in listShape)
+                    {
+                        Point actualPoint1 = new Point();
+                        Point actualPoint2 = new Point();
+                        actualPoint1.X = point1.X + tmp.point1.X;
+                        actualPoint1.Y = point1.Y + tmp.point1.Y;
+                        actualPoint2.X = point1.X + tmp.point2.X;
+                        actualPoint2.Y = point1.Y + tmp.point2.Y;
+
+                        shape = tmp.factory.Create(tmp.factory, tmp.color, tmp.thickness, actualPoint1, actualPoint2);
+
+                        tempList.Add(shape);
+                        shape.DrawInCanvas(canvas);
+                    }
+                   // list.Add(tempList);
+                  //  listShapes.Items.Add(tempList);
+
+
+                    // Reset initial settings
+
+                    shape = null;
+                    Cursor = Cursors.Arrow;
+
+                    //!!! listShape = null;
+                }
+            }
+        }*/
 
         private void cbFactory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            foreach (var plugin in Plugins)
+            if (cbFactory.Items.Count != 0)
             {
-                // Set selected custom factory
-                if (plugin.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
+                foreach (var plugin in Plugins)
                 {
-                    factory = plugin.Value;
-                    break;
+                    // Set selected custom factory
+                    if (plugin.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
+                    {
+                        factory = plugin.Value;
+                        userShape = null;
+                        return;
+                    }
+                }
+                foreach (var shape in UserShapes)
+                {
+                    // Set selected custom shape
+                    if (shape.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
+                    {
+                        userShape = shape.Value;
+                        factory = null;
+                        return;
+                    }
                 }
             }
+            userShape = null;
         }
 
         private void Draw()

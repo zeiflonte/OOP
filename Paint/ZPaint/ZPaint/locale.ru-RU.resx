@@ -189,4 +189,10 @@
   <data name="mitSetFolder" xml:space="preserve">
     <value>Установить папку</value>
   </data>
+  <data name="butApply" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="butSave" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
 </root>

@@ -12,6 +12,7 @@ using System.IO;
 
 namespace ZPaint
 {
+    [Serializable]
     class ListFigures
     {
         public List<List<Shape>> list;
