@@ -1,1 +1,6 @@
 D:\Study\ООП\SAX\bin\Debug\SAX.exe.config
+D:\Study\ООП\SAX\bin\Debug\SAX.exe
+D:\Study\ООП\SAX\bin\Debug\SAX.pdb
+D:\Study\ООП\SAX\obj\Debug\SAX.csprojResolveAssemblyReference.cache
+D:\Study\ООП\SAX\obj\Debug\SAX.exe
+D:\Study\ООП\SAX\obj\Debug\SAX.pdb
