@@ -195,34 +195,18 @@ namespace ZPaint
                     {
                         Point actualPoint1 = new Point();
                         Point actualPoint2 = new Point();
-                        actualPoint1.X =  point1.X;
-                        actualPoint1.Y =  point1.Y;
-                        actualPoint2.X =  point2.X;
-                        actualPoint2.Y =  point2.Y;
+                        actualPoint1.X = tmp.point1.X + point1.X;
+                        actualPoint1.Y = tmp.point1.Y + point1.Y;
+                        actualPoint2.X = tmp.point2.X + point2.X + (point2.X - point1.X);
+                        actualPoint2.Y = tmp.point2.Y + point2.Y + (point2.Y - point1.Y);
 
                         shape = tmp.factory.Create(tmp.factory, tmp.color, tmp.thickness, actualPoint1, actualPoint2);
-                        // sh = shape;
-                        /* shape.point1.X += point1.X;
-                         shape.point1.Y += point1.Y;
-                         shape.point2.X += point2.X;
-                         shape.point2.Y += point2.Y;*/
 
                         tempList.Add(shape);
                         shape.DrawInCanvas(canvas);
                     }
                     list.Add(tempList);
                     listShapes.Items.Add(tempList);
-
-                    /* foreach (Shape figure in listShape)
-                     {
-                         factory = new FactoryEllipse();
-                         shape = factory.Create(figure.color, figure.thickness, figure.point1, figure.point2);
-                         List<Shape> tempList = new List<Shape>();
-                         tempList.Add(shape);
-                         list.Add(tempList);
-                         listShapes.Items.Add(tempList);
-                         shape.DrawInCanvas(point1, point2, canvas);
-                     }*/
 
                     // Reset initial settings
 
@@ -510,6 +494,7 @@ namespace ZPaint
                 if (plugin.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
                 {
                     factory = plugin.Value;
+                    listShape = null;
                     return;
                 }
             }
@@ -519,6 +504,7 @@ namespace ZPaint
                 if (shape.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
                 {
                     listShape = shape.Value;
+                    factory = null;
                     return;
                 }
             }
@@ -765,14 +751,17 @@ namespace ZPaint
             }
         }
 
+        string shapeName;
+
         private void window_SubmitClicked(object sender, EventArgs e)
         {
             listShape = Creator.listShape;
+            shapeName = Creator.shapeName;
         }
 
         private void butCreator_Click(object sender, RoutedEventArgs e)
         {
-            Creator window = new Creator();
+            Creator window = new Creator(Plugins, UserShapes);
             window.SubmitClicked += new EventHandler(window_SubmitClicked);
             if (window.ShowDialog() == true)
             {
@@ -782,8 +771,8 @@ namespace ZPaint
                 //listShape = Creator.listShape;
 
                 ComboBoxItem item = new ComboBoxItem();
-                item.Content = "New figure";
-                UserShapes.Add("New figure", listShape);
+                item.Content = shapeName;
+                UserShapes.Add(shapeName, listShape);
                 cbFactory.Items.Add(item);
                 listShape = null;
             }

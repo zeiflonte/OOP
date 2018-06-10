@@ -21,6 +21,8 @@ namespace ZPaint
     {
         public static List<Shape> listShape { get; set; }
 
+        public static string shapeName { get; set; }
+
         private Shape shape;
         private SolidColorBrush exColor;
 
@@ -33,7 +35,9 @@ namespace ZPaint
         private Point point2;
         private int thickness;
         private SolidColorBrush color;
-        Dictionary<string, Factory> Plugins = new Dictionary<String, Factory>();
+
+        Dictionary<string, Factory> Plugins;
+        Dictionary<string, List<Shape>> UserShapes;
 
         public event EventHandler SubmitClicked;
 
@@ -77,9 +81,14 @@ namespace ZPaint
             factory = new FactoryHexagon();
         }
 
-        public Creator()
+        public Creator(Dictionary<string, Factory> Plugins, Dictionary<string, List<Shape>> UserShapes)
         {
+            this.Plugins = Plugins;
+            this.UserShapes = UserShapes;
+
             InitializeComponent();
+            this.Height = 299;
+
             listShape = new List<Shape>();
         }
 
@@ -221,6 +230,43 @@ namespace ZPaint
 
         private void butSave_Click(object sender, RoutedEventArgs e)
         {
+            bool isEmpty = !listShape.Any();
+            if (isEmpty)
+            {
+                MessageBox.Show("The field is empty");
+                return;
+            }
+            this.Height = 332;
+            butSave.Visibility = Visibility.Hidden;
+        }
+
+        private void butApply_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(txtName.Text))
+            {
+                foreach (var plugin in Plugins)
+                {
+                    if (plugin.Key == txtName.Text)
+                    {
+                        MessageBox.Show("The name is already in use");
+                        return;
+                    }
+                }
+                foreach (var shapeName in UserShapes)
+                {
+                    if (shapeName.Key == txtName.Text)
+                    {
+                        MessageBox.Show("The name is already in use");
+                        return;
+                    }
+                }
+                shapeName = txtName.Text;
+            }
+            else
+            {
+                MessageBox.Show("The name is empty");
+                return;
+            }
             if (SubmitClicked != null)
             {
                 SubmitClicked(this, new EventArgs());
