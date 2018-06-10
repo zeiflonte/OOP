@@ -2,8 +2,8 @@
 <body>
   <locale>English</locale>
   <tools>
-    <thickness>Medium</thickness>
-    <color>Blue</color>
+    <thickness>Thick</thickness>
+    <color>Red</color>
   </tools>
   <background>White</background>
 </body>

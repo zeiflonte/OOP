@@ -26,18 +26,22 @@ namespace ZPaint.List
 
         // Storage of plugin figure
         Dictionary<string, Factory> Plugins;
+        
         // Storage of user figures
         Dictionary<string, List<Shape>> UserShapes;
 
+        // Invoked if a tool was selected
         public event EventHandler FactorySelected;
 
         public Tools(Dictionary<string, Factory> Plugins, Dictionary<string, List<Shape>> UserShapes, string locale)
         {
             this.Plugins = Plugins;
             this.UserShapes = UserShapes;
+
+            // Set language for tools
             SetLocale(locale);
         }
-
+            
         private void SetLocale(string _culture)
         {
             CultureInfo culture = CultureInfo.CreateSpecificCulture(_culture);
@@ -91,7 +95,6 @@ namespace ZPaint.List
             }
 
             cbFactory.SelectedIndex = 0;
-            // MainWindow.SetLocale(GetLocale());
         }
 
         // Choose a type of a figure

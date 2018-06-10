@@ -26,9 +26,8 @@ using ZPaint.List;
 namespace ZPaint
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Container for storable user data, such as list of figures and struct of user figure patterns 
     /// </summary>
-
     [DataContract]
     public class UserData
     {
@@ -39,20 +38,22 @@ namespace ZPaint
         public Dictionary<string, List<Shape>> UserShapes = new Dictionary<String, List<Shape>>();
     }
 
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
     public partial class MainWindow : Window
     {
         private CultureInfo culture;
 
         private Shape shape;
-        private SolidColorBrush exColor;
 
         private Factory factory;
         private ListFigures list = new ListFigures();
         List<Shape> listShape;
-        List<Shape> listExShape;
+        List<Shape> userShape;
 
         // Initial figure properties
-
+        
         private Point point1;
         private Point point2;
         private int thickness;
@@ -95,7 +96,6 @@ namespace ZPaint
 
         Dictionary<string, Factory> Plugins = new Dictionary<string, Factory>();
         Dictionary<string, List<Shape>> UserShapes = new Dictionary<String, List<Shape>>();
-        private int amountOfPlugins = 0;
 
         public static string pluginsPath = "../../../Plugins";
         // public static string pluginsPath = "../../../Pentagon/bin/Debug";
@@ -106,9 +106,14 @@ namespace ZPaint
             XMLLoad();
             addPluginsFactories();
             addPlugins();
+            LoadTools();
+        }
 
+        private void LoadTools()
+        {
             string locale = GetLocale();
             Tools tools = new Tools(Plugins, UserShapes, locale);
+            // Invoke the event if a tool was selected
             tools.FactorySelected += new EventHandler(tools_FactorySelected);
             tools.DrawingToolsLoad(ref cbFactory);
         }
@@ -126,7 +131,7 @@ namespace ZPaint
 
             // Set a cursor type
 
-            if (factory != null || listShape != null)
+            if (factory != null || userShape != null)
             {
                 Cursor = Cursors.Pen;
             }
@@ -160,7 +165,8 @@ namespace ZPaint
             }
             else
             {
-                if (listShape != null)
+                // Selected a user figure
+                if (userShape != null)
                 {
                     // Save the second position
 
@@ -170,30 +176,32 @@ namespace ZPaint
 
                     List<Shape> tempList = new List<Shape>(); 
 
-                    foreach (Shape tmp in listShape)
+                    foreach (Shape tmp in userShape)
                     {
                         Point actualPoint1 = new Point();
                         Point actualPoint2 = new Point();
+
+                        // Set position of a new figure
                         actualPoint1.X = point1.X + tmp.point1.X;
                         actualPoint1.Y = point1.Y + tmp.point1.Y;
                         actualPoint2.X = point1.X + tmp.point2.X;
                         actualPoint2.Y = point1.Y + tmp.point2.Y;
 
+                        // Create a new part of a collection based on a user pattern
                         shape = tmp.factory.Create(tmp.factory, tmp.color, tmp.thickness, actualPoint1, actualPoint2);
 
+                        // Save each part of a collection
                         tempList.Add(shape);
                         shape.DrawInCanvas(canvas);
                     }
+
+                    // Save a whole collection
                     list.Add(tempList);
                     listShapes.Items.Add(tempList);
                     
-
                     // Reset initial settings
-
                     shape = null;
                     Cursor = Cursors.Arrow;
-
-                    //!!! listShape = null;
                 }
             }
         }
@@ -236,7 +244,6 @@ namespace ZPaint
 
         private void comboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
             // Choose a color of a figure
 
             var dic = new Dictionary<String, SolidColorBrush>();
@@ -266,7 +273,6 @@ namespace ZPaint
                 {
                     shape.SetColor(color);
                 }
-                exColor = listShape.First().color;
                 list.Draw(canvas);
             }
         }
@@ -275,28 +281,26 @@ namespace ZPaint
         {
             // Restore a previous color
 
-            if (listExShape != null)
+            foreach (var shapes in list.list)
             {
-                foreach (var shape in listExShape)
+                foreach (var shape in shapes)
                 {
-                    shape.color = exColor;
+                    if (shape.IsSelected)
+                    {
+                        shape.IsSelected = false;
+                    }
                 }
             }
 
             listShape = listShapes.SelectedItem as List<Shape>;
 
-            // Save the previous color
-
             if (listShape != null)
             {
-                listExShape = listShape;
-                exColor = listShape.First().color;
-
                 // Illuminate a selected figure
 
                 foreach (var shape in listShape)
                 {
-                    shape.color = Brushes.Pink;
+                    shape.IsSelected = true;
                 }
             }
 
@@ -305,14 +309,19 @@ namespace ZPaint
 
         private void listShapes_LostFocus(object sender, RoutedEventArgs e)
         {
-            if (listExShape != null)
+            // Restore a previous color
+
+            foreach (var shapes in list.list)
             {
-                foreach (var shape in listExShape)
+                foreach (var shape in shapes)
                 {
-                    shape.color = exColor;
+                    if (shape.IsSelected)
+                    {
+                        shape.IsSelected = false;
+                    }
                 }
-                list.Draw(canvas);
             }
+            list.Draw(canvas);
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -324,19 +333,10 @@ namespace ZPaint
                 list.Remove(listShape);
                 listShapes.Items.Remove(listShapes.SelectedItem);
             }
+            list.Draw(canvas);
         }
 
         Factory plugin;
-
-      /*  private void deletePlugins()
-        {
-            var count = cbFactory.Items.Count - 1;
-            for (int i = count; i >= count - amountOfPlugins + 1; i--)
-            {
-                cbFactory.Items.RemoveAt(i);
-            }
-            amountOfPlugins = 0;
-        } */
 
         private void addPluginsFactories()
         {
@@ -379,15 +379,7 @@ namespace ZPaint
 
                             plugin = (Factory)Activator.CreateInstance(type);
 
-                            //ComboBoxItem item = new ComboBoxItem();
-
-                            //item.Content = plugin.PluginName(locale);
-
                             Plugins.Add(plugin.PluginName(locale), plugin);
-
-                           // Tools.PluginTools.Add(item);
-
-                            //amountOfPlugins++;
                         }
                     }
                     catch (Exception e)
@@ -442,19 +434,16 @@ namespace ZPaint
                 try
                 {
                     // Load assembly
-
                     Assembly assembly = Assembly.LoadFrom(pluginFile);
                     var _type = typeof(IPluginFigure);
 
                     // Get all types that implement an interface
-
                     var types = assembly.GetTypes()
                         .Where(p => _type.IsAssignableFrom(p));
 
                     foreach (var type in types)
                     {
                         // Add instances of received types implementing factories in the program
-
                         typeList.Add(type);
                     }
                 }
@@ -476,7 +465,7 @@ namespace ZPaint
                     if (plugin.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
                     {
                         factory = plugin.Value;
-                        listShape = null;
+                        userShape = null;
                         return;
                     }
                 }
@@ -485,7 +474,7 @@ namespace ZPaint
                     // Set selected custom shape
                     if (shape.Key == (String)((ComboBoxItem)cbFactory.SelectedItem).Content)
                     {
-                        listShape = shape.Value;
+                        userShape = shape.Value;
                         factory = null;
                         return;
                     }
@@ -510,7 +499,6 @@ namespace ZPaint
                 cbColor.Text = colorValue[0].InnerText;
 
                 XmlNodeList backgroundValue = xmlDocument.GetElementsByTagName("background");
-                // BackgroundColor = new SolidColorBrush((Color)ColorConverter.ConvertFromString(backgroundColor[0].InnerText));
                 cbBackgroundColor.Text = backgroundValue[0].InnerText;
             }
             catch (Exception ex)
@@ -523,6 +511,7 @@ namespace ZPaint
             }
         }
 
+        // Save an XML document with all configuration
         private void Window_Closed(object sender, EventArgs e)
         {
             XmlDocument xmlDocument = new XmlDocument();
@@ -550,7 +539,6 @@ namespace ZPaint
             color.AppendChild(colorValue);
 
             XmlElement background = xmlDocument.CreateElement(string.Empty, "background", string.Empty);
-            // XmlText backgroundColor = xmlDocument.CreateTextNode(canvas.Background.ToString());
             XmlText backgroundValue = xmlDocument.CreateTextNode((String)((ComboBoxItem)cbBackgroundColor.SelectedItem).Content);
             body.AppendChild(background);
             background.AppendChild(backgroundValue);
@@ -558,6 +546,7 @@ namespace ZPaint
             xmlDocument.Save("../../config.xml");
         }
 
+        // Set component names arrording to the selected language
         private void SetLocale(string _culture)
         {
             culture = CultureInfo.CreateSpecificCulture(_culture);
@@ -637,14 +626,17 @@ namespace ZPaint
         {
             // Restore original color of an illuminated figure
 
-            if (listExShape != null)
+            foreach (var shapes in list.list)
             {
-                foreach (Shape shape in listExShape)
+                foreach (var shape in shapes)
                 {
-                    shape.color = exColor;
+                    if (shape.IsSelected)
+                    {
+                        shape.IsSelected = false;
+                    }
                 }
-                list.Draw(canvas);
             }
+            list.Draw(canvas);
 
             // Open a save file dialogue
 
@@ -659,11 +651,11 @@ namespace ZPaint
                 
                 string filename = fileSave.FileName;
 
-                //DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(list.GetType(), typeList.ToArray());
                 DataContractJsonSerializer jsonSerializer = new DataContractJsonSerializer(typeof(UserData), typeList.ToArray());
 
                 using (FileStream stream = new FileStream(filename, FileMode.Create))
                 {
+                    // Save data in a UserData serializable instance
                     UserData dataToSave = new UserData()
                     {
                         list = list.list,
@@ -671,7 +663,6 @@ namespace ZPaint
                     };
 
                     jsonSerializer.WriteObject(stream, dataToSave);
-                    //list.Serialize(jsonSerializer, stream);
                 }
             }
 
@@ -686,11 +677,13 @@ namespace ZPaint
             canvas.Children.Clear();
 
             // Delete user figures
-            UserShapes.Clear();
-            cbFactory.Items.Clear();
+            UserShapes.Clear();           
 
             // Set default values
             factory = null;
+            userShape = null;
+            cbFactory.Items.Clear();
+            LoadTools();
             cbFactory.SelectedIndex = 0;
         }
 
@@ -718,18 +711,17 @@ namespace ZPaint
                     try
                     {
                         list.Clear();
-                        //list.Deserialize(jsonSerializer, stream)
                         
-                        // Deserialization from JSON  
+                        // Read data contained in a UserData serialized instance
                         UserData dataToLoad = (UserData)jsonSerializer.ReadObject(stream);
                         list.list = dataToLoad.list;
                         UserShapes = dataToLoad.UserShapes; 
-
 
                         // Create figures
 
                         foreach (var listShape in list.list)
                         {
+                            // Add in the sidebar
                             listShapes.Items.Add(listShape);
                             foreach (Shape shape in listShape)
                             {
@@ -739,51 +731,43 @@ namespace ZPaint
                         shape = null;
                     }
                     catch (SerializationException ex)
-                    { MessageBox.Show(ex.Message); }
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
                 }
 
                 fileOpen = null;
 
-                // Add custom figures in list
-
-                /* foreach (var shape in UserShapes)
-                 {
-                     ComboBoxItem item = new ComboBoxItem();
-                     item.Content = shape.Key;
-                     cbFactory.Items.Add(item);
-                 }
-                 listShape = null;*/
-
-                string locale = GetLocale();
-                Tools tools = new Tools(Plugins, UserShapes, locale);
-                tools.FactorySelected += new EventHandler(tools_FactorySelected);
-                tools.DrawingToolsLoad(ref cbFactory);
+                // Load the tool list 
+                cbFactory.Items.Clear();
+                LoadTools();
             }
         }
 
         string shapeName;
 
+        // Invoked if submit button was clicked
         private void window_SubmitClicked(object sender, EventArgs e)
         {
+            // Get values from the Creator window
             listShape = Creator.listShape;
             shapeName = Creator.shapeName;
         }
 
         private void butCreator_Click(object sender, RoutedEventArgs e)
         {
+            // Determine the current language
             string locale = GetLocale();
+            // Open the Creator window
             Creator window = new Creator(Plugins, UserShapes, locale);
             window.SubmitClicked += new EventHandler(window_SubmitClicked);
             if (window.ShowDialog() == true)
             {
-                //MessageBox.Show(listShape.ToString());
-
-                // plugin = (Factory)Activator.CreateInstance(type);
-                //listShape = Creator.listShape;
-
+                // Save a new user figure
                 ComboBoxItem item = new ComboBoxItem();
                 item.Content = shapeName;
                 UserShapes.Add(shapeName, listShape);
+                // Add in the tool list
                 cbFactory.Items.Add(item);
                 listShape = null;
             }

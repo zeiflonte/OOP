@@ -12,7 +12,6 @@ namespace ZPaint
     [Serializable]
     public class Line : Shape
     {
-        [DataMember]
         public double X1
         {
             get
@@ -24,7 +23,7 @@ namespace ZPaint
                 ((System.Windows.Shapes.Line)figure).X1 = value;
             }
         }
-        [DataMember]
+
         public double X2
         {
             get
@@ -36,7 +35,7 @@ namespace ZPaint
                 ((System.Windows.Shapes.Line)figure).X2 = value;
             }
         }
-        [DataMember]
+
         public double Y1
         {
             get
@@ -48,7 +47,7 @@ namespace ZPaint
                 ((System.Windows.Shapes.Line)figure).Y1 = value;
             }
         }
-        [DataMember]
+
         public double Y2
         {
             get
@@ -67,14 +66,6 @@ namespace ZPaint
         protected Line(SerializationInfo info, StreamingContext context) : base(info, context)
         { }
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("color", color);
-            info.AddValue("thickness", thickness);
-            info.AddValue("point1", point1);
-            info.AddValue("point2", point2);
-        }
-
         public override void SetParameters(SolidColorBrush color, int thickness, Point point1, Point point2)
         {
             this.point1 = point1;
@@ -87,6 +78,7 @@ namespace ZPaint
 
             this.thickness = thickness;
             this.color = color;
+            actualColor = color;
         }
 
         public override System.Windows.Shapes.Shape DrawFigure()

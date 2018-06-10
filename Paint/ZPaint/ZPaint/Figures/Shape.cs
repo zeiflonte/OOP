@@ -8,11 +8,12 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Runtime.Serialization;
+using System.ComponentModel;
 
 namespace ZPaint
 {
     [Serializable]
-    public abstract class Shape : ISerializable
+    public abstract class Shape : ISerializable//, INotifyPropertyChanged
     {
         public System.Windows.Shapes.Shape figure;
 
@@ -24,7 +25,43 @@ namespace ZPaint
 
         public int thickness;
 
+        public SolidColorBrush actualColor;
+
         public SolidColorBrush color;
+
+        public SolidColorBrush selectionColor = Brushes.Pink;
+
+        public event PropertyChangedEventHandler SelectionChanged;
+
+        private bool isSelected;
+
+        // Contains a selected/unselected state of a particular figure
+        public bool IsSelected
+        {
+            get
+            {
+                return isSelected;
+            }
+            set
+            {
+                isSelected = value;
+                OnSelectionChanged(isSelected);
+            }
+        }
+
+        // Choose a proper color for a selected/unselected figure
+        protected void OnSelectionChanged(bool value)
+        {
+            if (value)
+            {
+                actualColor = selectionColor;
+            }
+            else
+            {
+                actualColor = color;
+            }
+        }
+
 
         protected Point[] points;
 
@@ -73,7 +110,7 @@ namespace ZPaint
             SetParameters(color, thickness, point1, point2);
         }
 
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("color", color);
             info.AddValue("thickness", thickness);
@@ -98,6 +135,7 @@ namespace ZPaint
         public void SetColor(SolidColorBrush color)
         {
             this.color = color;
+            actualColor = color;
         }
 
         public void SetThickness(int thickness)

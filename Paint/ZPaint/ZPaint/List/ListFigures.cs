@@ -42,7 +42,6 @@ namespace ZPaint
             return list.Count();
         }
 
-        // ???
         public new Type GetType()
         {
             return list.GetType();
@@ -50,10 +49,6 @@ namespace ZPaint
 
         public void Serialize(DataContractJsonSerializer jsonSerializer, FileStream stream)
         {
-            /*foreach (var shape in list)
-            {
-                jsonSerializer.WriteObject(stream, shape);
-            }*/
             jsonSerializer.WriteObject(stream, list);
         }
 
@@ -71,7 +66,7 @@ namespace ZPaint
                 {
                     // Settings for a canvas
 
-                    figure.figure.Stroke = figure.color;
+                    figure.figure.Stroke = figure.actualColor;
                     figure.figure.StrokeThickness = figure.thickness;
 
                     // Draw a figure on the canvas
